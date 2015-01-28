@@ -47,7 +47,12 @@ unsigned char  fram_len = 0;
 
 //u32 tmpxxx;//用于计数
 //u8 master_pre_value;//扫描按键值的前面
+//开始的时候直接将这些变化值放在app里面，当在保存的时候这三个值是变化，直接导致保存的值
+//一直是错误的，也就是校验和一直不对
 
+u16  Voltage_Tmp;//电压采样的AD值
+u16  Weight_Tmp;//传感器的捕捉的重量值
+u16  Weight_Value;////实际采集到的最后重量AD值
 
 //楼层数据保存
 Floor_Data   floor_tmp[MAX_FLOOR_NUM];
@@ -184,24 +189,46 @@ void InitializeData(void)
 	UINT16 wCheckSum = 0x00;
 	UINT8 *pPoint;
 	UINT16	i;
-//	BOOL 	cRet = FALSE;
 	BOOL 	bCheckSumErr = FALSE;
-//	BOOL	bLoadDefaultSettings = FALSE;
 	UINT8	ReadCheckSumCounts = 0;
-//	UINT8 	uiKey = UIKEY_NONE;
 	u32  xxx_tmp;
-	
 
-	while(!bCheckSumErr && (ReadCheckSumCounts < 5))
+	//while(!bCheckSumErr && (ReadCheckSumCounts < 5))
+	while(ReadCheckSumCounts < 3)
 	{
-		Flash_ReadInfo((UINT8 *)&App, APP_SETUP_ADD, sizeof(App));
-
-		pPoint = (UINT8 *)&App;
-		pPoint += 2;//去掉前两个，从第2位开始校验
-		for(i = 0x00;i < sizeof(App) -2;i++)
+		if(ReadCheckSumCounts == 0)
 		{
-			wCheckSum += *pPoint++;
+			Flash_ReadInfo((UINT8 *)&App, APP_SETUP_ADD, sizeof(App));
+			pPoint = (UINT8 *)&App;
+			pPoint += 2;//去掉前两个，从第2位开始校验
+			for(i = 0x00;i < sizeof(App) -2;i++)
+			{
+				wCheckSum += *pPoint++;
+			}
+		}else if(ReadCheckSumCounts == 1)
+		{
+			Flash_ReadInfo((UINT8 *)&App, APP_SETUP_ADD2, sizeof(App));
+			pPoint = (UINT8 *)&App;
+			pPoint += 2;//去掉前两个，从第2位开始校验
+			for(i = 0x00;i < sizeof(App) -2;i++)
+			{
+				wCheckSum += *pPoint++;
+			}
+
+		}else if(ReadCheckSumCounts == 2)
+		{
+			Flash_ReadInfo((UINT8 *)&App, APP_SETUP_ADD3, sizeof(App));
+			pPoint = (UINT8 *)&App;
+			pPoint += 2;//去掉前两个，从第2位开始校验
+			for(i = 0x00;i < sizeof(App) -2;i++)
+			{
+				wCheckSum += *pPoint++;
+			}
+		}else
+		{
+
 		}
+
 		if(App.wLicCheckSum != wCheckSum)
 		{
 			bCheckSumErr = TRUE;
@@ -219,16 +246,17 @@ void InitializeData(void)
 		App.Weight.Rated_weight = 2000;
 		App.Weight.Warning_weight= 90;
 		App.Weight.Alarm_weight = 110;
+		App.Weight.Empty_weight= 1200;
 		App.Weight.weight_display_change_flg = 1;//默认是显示控制
 
-		App.Input_Data = 0xff;
+		//App.Input_Data = 0xff;
 
 		App.Up_buchang = 0;
 		App.Down_buchang = 0;
 		App.Other_buchang = 0;
 		App.Max_floor = 25;
 
-		App.Floor_CurrentCount_Init = 20000;
+		//App.Floor_CurrentCount_Init = 20000;
 
 		wCheckSum = 0x00;
 		pPoint = (UINT8 *)&App;
@@ -240,9 +268,24 @@ void InitializeData(void)
 		App.wLicCheckSum = wCheckSum;
 
 		Flash_WriteInfo((u8*)&App,APP_SETUP_ADD,sizeof(App));
+		DelayMs(50);
+		Flash_WriteInfo((u8*)&App,APP_SETUP_ADD2,sizeof(App));
+		DelayMs(50);
+		Flash_WriteInfo((u8*)&App,APP_SETUP_ADD3,sizeof(App));
+		DelayMs(50);
 
-		 //printf("123\r\n");
+	}
 
+	if(ReadCheckSumCounts==1)
+	{
+		Flash_WriteInfo((u8*)&App,APP_SETUP_ADD,sizeof(App));
+		DelayMs(50);
+	}else if(ReadCheckSumCounts==2)
+	{
+		Flash_WriteInfo((u8*)&App,APP_SETUP_ADD,sizeof(App));
+		DelayMs(50);
+		Flash_WriteInfo((u8*)&App,APP_SETUP_ADD2,sizeof(App));
+		DelayMs(50);
 	}
 
 	memcpy(&App_Flash,&App,sizeof(App));
@@ -251,7 +294,7 @@ void InitializeData(void)
 	 //printf("\n芯片ID号 = 0x%x", System.Device.W25q64.SPI_Flash_ReadID());
 	 
 	//读取保存的当前编码值
-	 Flash_ReadInfo((UINT8 *)&xxx_tmp, FLOOR_CUR_ADD, 4);
+	Flash_ReadInfo((UINT8 *)&xxx_tmp, FLOOR_CUR_ADD, 4);
 	DelayMs(50);
 	Floor_CurrentCount = xxx_tmp-10001;
 	
@@ -299,8 +342,8 @@ static void InitializeApp(void)
 	
     	//System.Device.Adc.Register(AdcChannel0, (ushort *)(&Temperature_tmp));
 
-   	 System.Device.Adc.Register(AdcChannel0, (ushort *)(&App.Weight_Tmp));
-	System.Device.Adc.Register2(AdcChannel1, (ushort *)(&App.Voltage_Tmp));
+   	 System.Device.Adc.Register(AdcChannel0, (ushort *)(&Weight_Tmp));
+	System.Device.Adc.Register2(AdcChannel1, (ushort *)(&Voltage_Tmp));
 
     	//System.Device.Usart1.RxdRegister(Usart1RxdFunction);
 

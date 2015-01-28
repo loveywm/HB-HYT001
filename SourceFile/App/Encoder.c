@@ -263,6 +263,90 @@ u8	Encoder_Demarcate_Init(void)
 
 
 
+//供主界面调用平层
+u8	Auto_Encoder_Demarcate(void)
+{
+	u8 nKey;
+	u8 floor_num_tmp = Target_F;
+	//Floor_Data  floor_data;
+	u32 encoder_count= 0;
+	u32 encoder_diff= 0;
+	//u8 	encoder_flag=0;
+	
+	uiLcdClear();
+	
+	uiLcd_1414_ch(UISTR_XXX_SHIFOU, 6, 4+6,1);
+	uiLcdMediumString("OK", 3 ,3,0);
+
+	uiLcd_1414_ch(UISTR_XXX_SHIFOU+1, 6,76+6,1);
+	uiLcdMediumString("ESC", 3, 12,0);
+
+	//是否进行自动补偿?
+	uiLcd_1414_ch(UISTR_XXX_SHIFOU, 4, 35,2);
+	uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, 4, 35+14*2,2);
+	uiLcdMediumString("?", 2 ,13,0);
+
+	
+	while(1)
+	{
+		encoder_count = Floor_CurrentCount;
+		
+		//对应平层楼层保存的值
+		uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_count ,0,9,0,7);//显示对应楼层保存的计数器值
+		//uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_diff,2,9,0,7);//显示对应楼层保存的差值
+
+		//显示当前平层值
+		uiLcdDecimal(encoder_count,1,9,0,7);
+
+		nKey = uiKeyGetKey();
+		if(nKey == UIKEY_ESC)
+		{
+			break;
+		}
+		else if(nKey == UIKEY_OK)
+		{
+			if(encoder_count >floor_tmp[floor_num_tmp-1].floor_count )//上升
+			{
+				encoder_diff = encoder_count - floor_tmp[floor_num_tmp-1].floor_count;
+
+				if(encoder_diff > 1000)
+				{
+					continue;
+				}
+				App.Up_buchang = encoder_diff;
+				
+			}
+			else if(encoder_count <floor_tmp[floor_num_tmp-1].floor_count)//下降
+			{
+				encoder_diff =  floor_tmp[floor_num_tmp-1].floor_count -encoder_count ;
+				if(encoder_diff > 1000)
+				{
+					
+					continue;
+				}
+				
+				App.Down_buchang= encoder_diff;
+			}
+			else
+			{
+				encoder_diff  = 0;
+				
+			}
+			//保存系统参数
+			SaveSystemInfo();
+			break;
+	
+		}
+		else
+		{
+
+		}
+	}
+
+	uiLcdClear();//清屏
+	return 0;
+}
+
 
 
 

@@ -235,31 +235,11 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 		return ;
 	}
 
-	//显示当前楼层
-	for(ywm=0;ywm<App.Max_floor;ywm++)
-	{
-		if(Floor_CurrentCount < floor_tmp[ywm].floor_count)
-		{
-			if(ywm == 0)
-			{
-				uiLcdDecimal(1,0+1,5,0,2);
-			}
-			else
-			{
-				uiLcdDecimal(ywm,0+1,5,0,2);
-			}
-			
-			break;
-		}
-	}
 
-	//显示目标楼层
-	uiLcdDecimal(Target_F,0+1,14,1,2);
-
-	//显示呼叫的楼层数
+	 //显示呼叫的楼层数
 	for(ywm=0;ywm<3;ywm++)
 	{
-		if(uiTimeGetTickCount() - HB_Floor_Call_Buff[ywm].Call_Time_Count < 1000)//10s内显示
+		if(uiTimeGetTickCount() - HB_Floor_Call_Buff[ywm].Call_Time_Count < 300)//3//3s内显示
 		{
 			uiLcdDecimal(HB_Floor_Call_Buff[ywm].Call_num,2+1,8+(ywm*3),0,2);
 		}
@@ -269,8 +249,25 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 			HB_Floor_Call_Buff[ywm].Call_num = 0;
 			uiLcdLineErase8x16(2+1,8+(ywm*3),8+(ywm*3)+3,0);//将先前状态擦除
 		}
-
 	}
+	
+	//显示目标楼层
+	uiLcdDecimal(Target_F,0+1,14,1,2);
+
+	//显示当前楼层
+	for(ywm=0;ywm<App.Max_floor-1;ywm++)
+	{
+		if(Floor_CurrentCount < (floor_tmp[ywm].floor_count+(floor_tmp[ywm+1].floor_diff/2)))
+		{
+			uiLcdDecimal(ywm+1,0+1,5,0,2);
+			break;
+		}
+	}
+	if(Floor_CurrentCount > (floor_tmp[App.Max_floor-2].floor_count+(floor_tmp[App.Max_floor-1].floor_diff/2)))
+	{
+		uiLcdDecimal(App.Max_floor,0+1,5,0,2);
+	}
+
 
 	if(Parameter->Parameter_Change_Flag == 1)
 	{
@@ -337,11 +334,12 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 
 }
 
-
+/*
 static u8  Handle_Voltage(void)
 {
 	u16 ad_temp;
 	float temp;
+	
 
 	//获取电压的AD值
 	ad_temp = ADC_Filter_V();
@@ -355,28 +353,31 @@ static u8  Handle_Voltage(void)
 	uiLcdDecimal(((u16)(temp*100))%10,0,11+3,0,1);
 
 	uiLcdDecimal(((u16)(temp*1000))%10,0,11+4,0,1);
+
+
+	
 	
 	return 0;
 }
-
+*/
 
 static u8  Handle_Weight(Menu_Parameter *Parameter)
 {
 	u32 ad_temp,operate_temp;
 
 	//获取重量的AD值
-	App.Weight_Value = ADC_Filter();
+	Weight_Value = ADC_Filter();
 	//printf("App.Weight_Tmp===%d\r\n",App.Weight_Tmp);
 			
 	if(App.Weight.weight_clear_ad_value_sign == 0)//为正
 	{
-		if(App.Weight_Value >= App.Weight.weight_clear_ad_value)
+		if(Weight_Value >= App.Weight.weight_clear_ad_value)
 	         {
-	                  ad_temp=App.Weight_Value-App.Weight.weight_clear_ad_value;
+	                  ad_temp=Weight_Value-App.Weight.weight_clear_ad_value;
 	         }
 	         else
 	         {
-	               ad_temp=App.Weight.weight_clear_ad_value-App.Weight_Value;//显示负
+	               ad_temp=App.Weight.weight_clear_ad_value-Weight_Value;//显示负
 	                  //weight_display_sign=1;
 		}
 
@@ -384,37 +385,46 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	if(App.Weight.weight_clear_ad_value_sign == 1)//为负
 	{
 
-		ad_temp=App.Weight_Value+App.Weight.weight_clear_ad_value;
+		ad_temp=Weight_Value+App.Weight.weight_clear_ad_value;
 	}
-				
+
 	operate_temp=ad_temp;
 	ad_temp=(operate_temp * App.Weight.calibrate_sub_value)/App.Weight.calibrate_ad_sub_value;//得到最终的重量值	
 
 	//临时显示读取的重量值
 	//uiLcdDecimal(ad_temp,1+2, 0,0,4);
+	//除去空笼载重
+	if(ad_temp >App.Weight.Empty_weight)
+	{
+		ad_temp = ad_temp-App.Weight.Empty_weight;
+	}
+	else
+	{
+		ad_temp=0;
+	}
 
+	
 	//在这里进行报警和预警判断
 	if(ad_temp >(App.Weight.Rated_weight*App.Weight.Warning_weight/100))//超过预警值
 	{
-		//uiLcdLineErase8x16(2,10,16,0);//将先前状态擦除
+		uiLcdLineErase8x16(2,10,16,0);//将先前状态擦除
 		//提示预警
-		//uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 4,84, 1);
-		//uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 4,96, 3);
+		uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 4,84, 1);
+		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 4,96, 3);
 		
 		if(ad_temp >(App.Weight.Rated_weight*App.Weight.Alarm_weight/100))//超过报警值
 		{
 			//提示报警
-			//uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI, 4, 84, 3);
-			//uiLcdLineErase8x16(2,15,16,0);
+			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI, 4, 84, 3);
+			uiLcdLineErase8x16(2,15,16,0);
 			
 		}
 	}
 	else
 	{
-		//uiLcdLineErase8x16(2,10,16,0);//将先前状态擦除
+		uiLcdLineErase8x16(2,10,16,0);//将先前状态擦除
 	}
 	
-
 	Parameter->Weight_Integer = (u8)(ad_temp/1000);
 	ad_temp=ad_temp%1000;
 	Parameter->Weight_Decimal =(u8)(ad_temp/100);
@@ -618,7 +628,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 				App.Weight.Warning_weight = (u8)nValue;
 			}
                 		break;
-		case UISTR_MENU_ZAIZHONG_SET_BAOJINGZAIHE:
+		case UISTR_MENU_ZAIZHONG_SET_BAOJINGZAIHE://报警载荷
 			nValue = uiProcBoxNumber(&bRet, row, 12, 110, 1, 120, 3, 3, TRUE);
 			if (bRet) 
 			{
@@ -626,12 +636,20 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 				App.Weight.Alarm_weight= (u8)nValue;
 			}
                 		break;
-		case UISTR_MENU_ZAIZHONG_SET_ZHONGLIANGZHILING:
+		case UISTR_MENU_ZAIZHONG_SET_ZHONGLIANGZHILING://重量置零
 			nValue = uiProcBoxNumber(&bRet, row, 11, 0, 0, 1, 1, 1, TRUE);
 			if (bRet) 
 			{
 				//gsSetting.bLockEn = nValue;
 				App.Weight.weight_display_change_flg= (u8)nValue;
+			}
+                		break;
+		case UISTR_MENU_ZAIZHONG_SET_KONGZAIZHONGLIANG://空载重量
+			nValue = uiProcBoxNumber(&bRet, row, 10, 1200, 1, 2000, 4, 4, TRUE);
+			if (bRet) 
+			{
+				
+				App.Weight.Empty_weight= nValue;
 			}
                 		break;
 						
@@ -716,6 +734,10 @@ void uiProcMenuCustom(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row)
 		case UISTR_MENU_CALL_SET_DEL://楼层删除界面
 			Call_Del();
 			break;
+
+		case UISTR_MENU_ZIJIAN_SET://状态自检就是显示当前重量值
+			weight_flag();
+			break;
 		default:
 			break;
 	}
@@ -762,8 +784,10 @@ void uiProcMenuDrawValue(T_UI_MENUITEM *pUiMenuItem, int row, BOOL bIsReverse)
 			{
 				uiLcdSmallString("NO ", row*2+1, 17, 0);
 			}
-			
-			
+			break;
+		case UISTR_MENU_ZAIZHONG_SET_KONGZAIZHONGLIANG://空载重量
+			uiLcdDecimal(App.Weight.Empty_weight, row, 10, 0, 4);
+			uiLcdSmallString("Kg", row*2+1, 19, 0);
 			break;
 
 		//平层部分
@@ -958,6 +982,11 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
 				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
 				break;
+			case UISTR_MENU_ZAIZHONG_SET_KONGZAIZHONGLIANG://空载重量
+				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1414_ch(UISTR_XXX_KONGZAI, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_EDINGZHONGLIANG+2, (1+i)*2, HEAD_LEN+14*2, 2);
+				break;
 
 			//楼层学习下的显示
 			case UISTR_MENU_CALL_SET_UI://楼层学习界面
@@ -1025,14 +1054,7 @@ UINT8 SaveSystemInfo(void)
 	UINT8 *pData;
 	UINT16 wTemp;
 	UINT32 i;
-/*
-		pPoint = (UINT8 *)&App;
-		pPoint += 2;//去掉前两个，从第2位开始校验
-		for(i = 0x00;i < sizeof(App) -2;i++)
-		{
-			wCheckSum += *pPoint++;
-		}
-*/
+	
 	pData = (UINT8 *)&App;
 	pData += 2;
 	wTemp = 0x00;
@@ -1046,7 +1068,11 @@ UINT8 SaveSystemInfo(void)
 	memcpy(&App_Flash,&App,sizeof(App));
 	
 	Flash_WriteInfo((u8*)&App,APP_SETUP_ADD,sizeof(App));
-	
+	DelayMs(50);
+	Flash_WriteInfo((u8*)&App,APP_SETUP_ADD2,sizeof(App));
+	DelayMs(50);
+	Flash_WriteInfo((u8*)&App,APP_SETUP_ADD3,sizeof(App));
+	DelayMs(50);
 	return TRUE;
 }
 
@@ -1080,14 +1106,11 @@ void uiProcMenuSettingEnd(int nPopupMenuTitle)
 		{
 			bSave0 = TRUE;
 		}
-
-		
-		if(bSave0 == TRUE)
+		if(App.Weight.Empty_weight!= App_Flash.Weight.Empty_weight)
 		{
-			
-			SaveSystemInfo();
-
+			bSave0 = TRUE;
 		}
+
 	}
 	
 	if (nPopupMenuTitle == UISTR_MENU_PINGCHENG_SET)
@@ -1095,30 +1118,30 @@ void uiProcMenuSettingEnd(int nPopupMenuTitle)
 		if(App.Up_buchang!= App_Flash.Up_buchang)
 		{
 			bSave0 = TRUE;
-			HB_Send_CMD_DATA4(CMD_LEVELING_DATA_UP_BUCHANG,App.Up_buchang);
+			//HB_Send_CMD_DATA4(CMD_LEVELING_DATA_UP_BUCHANG,App.Up_buchang);
 		}
 		if(App.Down_buchang!=  App_Flash.Down_buchang)
 		{
 			bSave0 = TRUE;
-			HB_Send_CMD_DATA4(CMD_LEVELING_DATA_DOWN_BUCHANG,App.Down_buchang);
+			//HB_Send_CMD_DATA4(CMD_LEVELING_DATA_DOWN_BUCHANG,App.Down_buchang);
 		}
 		if(App.Other_buchang!= App_Flash.Other_buchang)
 		{
 			bSave0 = TRUE;
-			HB_Send_CMD_DATA4(CMD_LEVELING_DATA_OTHER_BUCHANG,App.Other_buchang);
+			//HB_Send_CMD_DATA4(CMD_LEVELING_DATA_OTHER_BUCHANG,App.Other_buchang);
 		}
 		if(App.Max_floor!= App_Flash.Max_floor)
 		{
 			bSave0 = TRUE;
 			//HB_Send_CMD_DATA4(CMD_LEVELING_DATA_OTHER_BUCHANG,App.Other_buchang);
-		}
+		}		
+	}
+	
+	if(bSave0 == TRUE)
+	{
 		
-		if(bSave0 == TRUE)
-		{
-			
-			SaveSystemInfo();
+		SaveSystemInfo();
 
-		}
 	}
 }
 
@@ -1238,6 +1261,88 @@ void uiProcMenu(int nPopupMenuTitle)
 void Voice_Call(u8 call_floor)
 {
 
+	u8 shiwei;
+	u8 gewei;
+	if(call_floor < 1)
+	{
+		return;
+	}
+	if((call_floor > 0) && (call_floor < 11))//ok
+	{
+		WTV_Voice(ONE_FLAG-1+call_floor);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else if((call_floor > 10) && (call_floor < 20))//ok
+	{
+		WTV_Voice(TEN_FLAG);
+		DelayMs(500);
+		WTV_Voice(ONE_FLAG-1+call_floor-10);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+		
+	}else if(call_floor == 20)//ok
+	{
+		WTV_Voice(TWO_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else if((call_floor > 20) && (call_floor < 30))
+	{
+		WTV_Voice(TWO_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(500);
+		WTV_Voice(ONE_FLAG-1+call_floor-20);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else if(call_floor == 30)
+	{
+		WTV_Voice(THREE_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else if((call_floor > 30) && (call_floor < 40))
+	{
+		WTV_Voice(THREE_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(500);
+		WTV_Voice(ONE_FLAG-1+call_floor-30);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else if(call_floor == 40)
+	{
+		WTV_Voice(FOUR_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else if((call_floor > 40) && (call_floor < 50))
+	{
+		WTV_Voice(FOUR_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(500);
+		WTV_Voice(ONE_FLAG-1+call_floor-40);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}else
+	{
+
+	}
+
+/*
+
 	switch(call_floor)
 	{
 		case 1:
@@ -1285,24 +1390,103 @@ void Voice_Call(u8 call_floor)
 			DelayMs(500);
 			WTV_Voice(THREE_FLAG);
 			break;
+		case 14:
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(FOUR_FLAG);
+			break;
+		case 15:
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(FIVE_FLAG);
+			break;
+		case 16:
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(SIX_FLAG);
+			break;
+		case 17:
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(SEVEN_FLAG);
+			break;
+		case 18:
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(EGHIT_FLAG);
+			break;
+		case 19:
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(NINE_FLAG);
+			break;
+		case 20:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			break;
+		case 21:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(ONE_FLAG);
+			break;
+		case 22:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(TWO_FLAG);
+			break;
+		case 23:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(THREE_FLAG);
+			break;
+		case 24:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(FOUR_FLAG);
+			break;
+		case 25:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(FIVE_FLAG);
+			break;
+		case 26:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(SIX_FLAG);
+			break;
+		case 27:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(SEVEN_FLAG);
+			break;
+		case 28:
+			WTV_Voice(TWO_FLAG);
+			DelayMs(500);
+			WTV_Voice(TEN_FLAG);
+			DelayMs(500);
+			WTV_Voice(SEVEN_FLAG);
+			break;
 		default:
 			break;
 	}
-	DelayMs(500);
+	DelayMs(400);
 	WTV_Voice(CENG_FALG);
-
-/*
-	u8 tmp;
-	for(tmp=0;tmp<App.Max_floor;tmp++)
-	{
-		if(tmp == call_floor)
-		{
-			WTV_Voice(ONE_FLAG);
-			break;
-		}
-
-
-	}
+	DelayMs(300);
 */
 
 }
@@ -1313,11 +1497,16 @@ void HB_RELAY_Mode(void)
             if(Floor_CurrentCount > Floor_TargetCount)//向下运行
             {
                      HB_RELAY_Flag = 2;
+		uiLcd_1616_ch(4,2,57,1);//显示下降图标
+		DelayMs(1000);
+		   
 
             }
             else if(Floor_CurrentCount < Floor_TargetCount)//向上运行
             {
                     HB_RELAY_Flag = 1;
+		 uiLcd_1616_ch(3,2,57,1);//显示上升图标
+		 DelayMs(1000);
             }
             else//停止
             {
@@ -1352,8 +1541,8 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 			Target_F =  App.Max_floor;
 		}
 
-		System.Device.IO.HB_Gpio_Set_Value(RELAY_1,1);
-		System.Device.IO.HB_Gpio_Set_Value(RELAY_2,1);
+		//System.Device.IO.HB_Gpio_Set_Value(RELAY_1,1);
+		//System.Device.IO.HB_Gpio_Set_Value(RELAY_2,1);
 
 		//HB_Send_Realy_CMD(CMD_RELAY_UP);
 	}
@@ -1364,8 +1553,8 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		{
 			Target_F =  1;
 		}
-		System.Device.IO.HB_Gpio_Set_Value(RELAY_1,0);
-		System.Device.IO.HB_Gpio_Set_Value(RELAY_2,0);
+		//System.Device.IO.HB_Gpio_Set_Value(RELAY_1,0);
+		//System.Device.IO.HB_Gpio_Set_Value(RELAY_2,0);
 		//HB_Send_Realy_CMD(CMD_RELAY_DOWN);
 	}
 	else if (nKey == UIKEY_ESC)//目标楼层退出
@@ -1385,7 +1574,12 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		
 		if(Target_F > App.Max_floor)
 		{
-			//界面提示错误值，
+			//界面提示错误值"目标层过大"
+	
+			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,6,66,2);
+			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,6,66+12*2,1);
+			uiLcd_1212_ch(UISTR_UI_GUODA,6,66+12*3,2);
+			DelayMs(1500);
 			
 		}
 		else
@@ -1416,7 +1610,9 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 	}
 	else if (nKey == UIKEY_DEL)//临时调出重量的数据显示
 	{
-		get_weight_clear_value();
+		//get_weight_clear_value();
+		Auto_Encoder_Demarcate();
+		uiProcMainDraw(TRUE,Parameter);
 
 	}
 
@@ -1429,7 +1625,8 @@ void uiProcProtocl(void)
 	u8  xxxx;
 	u32 wahh;
 	wahh = System.Device.Call_Floor.Remote_Scan();
-	if(wahh != 0)
+	//过滤多余信息方式
+	if((wahh != 0)&&(wahh < 0x01000000) &&((wahh&0xf)==0xf)&&((wahh&0xffffff)!= 0xffffff))
 	{
 		//uiLcdDecimal(wahh,3,0,0,7);
 		//printf("wahh==%x\r\n",wahh);
@@ -1474,6 +1671,12 @@ void uiProcMain(void)
 	u8 nKey;
 	u32 Time_tmp;
 	u32 Time_tmp1;
+	u32  Floor_CurrentCount_pre;
+	//u8 ywm;
+	u16 ad_temp;
+//	float temp;
+	static  u32 fuck_count=0;
+	static  u8  fuck_flag=0;//当前平层值已保存的标志==0是没有 ==1是有
 
 	//static u32	xxxx=0;
 
@@ -1509,6 +1712,8 @@ void uiProcMain(void)
 	
 	while(1)
 	{
+		Floor_CurrentCount_pre = Floor_CurrentCount;
+		
 		nKey  = uiKeyGetKey();//处理按键和楼层
 		if(nKey != UIKEY_NONE)
 		{	
@@ -1517,25 +1722,43 @@ void uiProcMain(void)
 		}
 		
 		 uiProcProtocl();//楼层呼叫接受处理
-		 if(uiTimeGetTickCount() -Time_tmp >100)//1500ms更新一次重量值
+		
+			 
+		 if(uiTimeGetTickCount() -Time_tmp >150)//1500ms更新一次重量值
                	 {
 
                        	 //以后每隔2s钟上传一次
                     	Handle_Weight(&Parameter);//重量值采集和处理
                         	Time_tmp =uiTimeGetTickCount();
 
-			//uiLcdDecimal(ADC_Filter_V(),0,0,0,5);
+			
+			//获取电压的AD值
+			ad_temp = ADC_Filter_V();
+			//连续1.5s*40=60s分钟左右没有检测到电压时，就保存当前楼层数值
+			if(ad_temp <100)//检测到的电压AD值小于100时认为
+			{
+				fuck_count++;
+				if(fuck_count >= 40)
+				{
+					if(fuck_flag ==0)
+					{
+						Flash_WriteInfo((u8*)&Floor_CurrentCount,FLOOR_CUR_ADD,4);
+						fuck_flag =1;
+						//uiLcdDecimal(Floor_CurrentCount,0,7,0,5);
+					}
+					
+				}
+			}
+			else
+			{
+				fuck_count =0;
+				fuck_flag =0;
+			}
 
-			Handle_Voltage();
+			//Handle_Voltage();
 
 			
-			//uiLcdDecimal(xxxx,3,12,0,4);
 
-			//Voice_Call(xxxx%10);
-			//printf("xxxx==%d\r\n",xxxx);
-
-			//xxxx++;
-			
                   }
 
 		if(HB_RELAY_Close_Flag == 1)//存在手柄断开了
@@ -1556,7 +1779,18 @@ void uiProcMain(void)
 			
 		//Handle_Master(&Parameter);
 
-		uiLcdDecimal(Floor_CurrentCount,2,11,0,5);
+		uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
+		
+		if(Floor_CurrentCount_pre >Floor_CurrentCount)
+		{
+			uiLcd_1616_ch(4,2,57,1);//显示下降图标
+		}else if(Floor_CurrentCount_pre < Floor_CurrentCount)
+		{
+			uiLcd_1616_ch(3,2,57,1);//显示上升图标
+		}else
+		{
+			uiLcd_1616_ch(5,2,57,1);//显示清空
+		}
 
 		uiProcMainDraw(FALSE,&Parameter);//更新显示
 		Parameter.Parameter_Change_Flag =0;

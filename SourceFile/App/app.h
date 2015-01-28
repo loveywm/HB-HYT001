@@ -27,12 +27,17 @@ typedef unsigned char BOOL;
 typedef unsigned char UINT8,u8;
 typedef unsigned short UINT16;
 typedef unsigned int UINT32,u32;
-#define 	APP_SETUP_ADD 		0x0  //系统参数存放的flash位置
-#define 	FLOOR_ADD 		10*1024  //楼层数据存放的flash位置
+#define 	APP_SETUP_ADD 		0*1024  //系统参数存放的flash位置1
+#define 	APP_SETUP_ADD2 		4*1024  //系统参数存放的flash位置2
+#define 	APP_SETUP_ADD3 		8*1024  //系统参数存放的flash位置3
 
-#define 	CALL_ADD 		30*1024  //楼层数据存放的flash位置
+#define 	FLOOR_ADD 		12*1024  //楼层数据存放的flash位置
 
-#define 	FLOOR_CUR_ADD 	4*1024  //楼层数据存放的flash位置
+#define 	CALL_ADD 		28*1024  //楼层数据存放的flash位置
+
+#define 	FLOOR_CUR_ADD 	32*1024  //楼层数据存放的flash位置
+
+#define 	PWD_MAP_ADD 	36*1024  //密码存放地址
 
 #define   MAX_FRAM_LEN    32   /*若帧长度大于此值，则认为无效，重新搜索帧头*/
 #define     MAX_FLOOR_NUM   50//此时定义楼层最大高度
@@ -59,6 +64,7 @@ typedef struct
 		u32	Rated_weight;//额定重量
 		u32	Warning_weight;//预警重量
 		u32	Alarm_weight;//报警重量
+		u32  Empty_weight;//空载重量
 		u32	calibrate_sub_value;//两个校准重量值差值
 		u32	calibrate_ad_sub_value;//两个校准重量值对应的AD检测值差值
 		u32  weight_clear_ad_value;////清零时重量所对应的AD检测值；实际是零点所对应的AD检测值，因为只校准时也会计算一个零点值替代清零值；
@@ -76,24 +82,11 @@ typedef struct
 		
 	}Weight;
 
-	 u16  Input_Data;//16位状态值检测存储值
-	 u16  Weight_Tmp;//传感器的捕捉的重量值
-	 u16  Weight_Value;////实际采集到的最后重量AD值
-	 
-	 u8	Master_Flag;//主令开关的各种位状态标志
-	// u8	Voice_Play_Flag;//声音正在运行标志
-
-	u32	Floor_Last_Count;//平层传感器保存数据
-
 	u32  Up_buchang;//上升补偿
 	u32	Down_buchang;//下降补偿
 	u32	Other_buchang;//其他补偿
 	u8	Max_floor;//设置最高楼层
-
-	u16  Voltage_Tmp;//电压采样的AD值
-
-	u32 Floor_CurrentCount_Init;//当前编码值
-	 
+ 
 }AppStruct;
 
 extern AppStruct App;
@@ -116,6 +109,10 @@ extern u8  HB_RELAY_Close_Flag;
 extern u8  HB_Floor_Call_Num;
 extern Call_Data    HB_Floor_Call_Buff[3];
 extern Call_Data    HB_Floor_Call[MAX_FLOOR_NUM];
+
+extern u16  Voltage_Tmp;//电压采样的AD值
+extern u16  Weight_Tmp;//传感器的捕捉的重量值
+extern u16  Weight_Value;////实际采集到的最后重量AD值
 
 #include "logic.h"
 

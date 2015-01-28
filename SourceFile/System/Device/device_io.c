@@ -73,6 +73,19 @@ static void HB_Gpio_Set_Value(u8 HB_Gpio_type,u8 HB_Gpio_Value)
         }
 }
 
+static u8  HB_Gpio_Get_Value(u8 HB_Gpio_type)
+{
+        u8 value=0;
+        switch(HB_Gpio_type)
+        {
+	        case    WTV_BUSY:
+	                        value = PeIn(7);
+	                        break;                             
+	        default:
+	                break;
+        }
+        return value;
+}
 
 void InitializeIO(void)
 {
@@ -113,9 +126,15 @@ void InitializeIO(void)
         	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         	GPIO_Init(GPIOE, &GPIO_InitStructure);
 
+	//busy引脚
+	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;//下拉输入
+ 	GPIO_Init(GPIOE, &GPIO_InitStructure);
+
 	
     
     	System.Device.IO.SetBeep = SetBeep;
 	System.Device.IO.HB_Gpio_Set_Value = HB_Gpio_Set_Value;
+	System.Device.IO.HB_Gpio_Get_Value =HB_Gpio_Get_Value;
 }
 

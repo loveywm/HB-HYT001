@@ -7,8 +7,8 @@
 
 #define MAX_PWD_GET_LENS		52	
 
-#define PWD_MAP_ADD			0x300000
-
+//#define PWD_MAP_ADD			0x300000
+//#define 	PWD_MAP_ADD 	36*1024  
 
 
 
@@ -29,8 +29,8 @@ u8 PwdVerify(u8* pcPwd)
 
 	for(i=0;i<MAX_PWD_BYTE_LENS;i++)//逐个比对，有一个不一样就失败返回
 	{
-		printf("Temp_Pwd[%d]==%d\r\n",i,Temp_Pwd[i]);
-		printf("pcPwd[%d]==%d\r\n",i,pcPwd[i]);
+		//printf("Temp_Pwd[%d]==%d\r\n",i,Temp_Pwd[i]);
+		//printf("pcPwd[%d]==%d\r\n",i,pcPwd[i]);
 		if(Temp_Pwd[i] != pcPwd[i])
 		{
 			
@@ -84,7 +84,7 @@ u8 Pwd_Enroll_Process(void)
 			if (nPos == 6 )
 			{
 
-				printf("pcRet== %d \r\n",nPos);
+				//printf("pcRet== %d \r\n",nPos);
 				//在这里比对
 				if(PwdSave(pcRet))
 				{
@@ -107,7 +107,7 @@ u8 Pwd_Enroll_Process(void)
 				continue;
 				
 			}
-			printf("nPos== %d \r\n",nPos);
+			//printf("nPos== %d \r\n",nPos);
 			//提示输入的数目不够
 			
 			continue;
@@ -129,7 +129,7 @@ u8 Pwd_Enroll_Process(void)
 				continue;
 			}
 			nPos--;
-			printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos]);
+			//printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos]);
 
 			for (i=0; i<nPos; i++)
 			{
@@ -149,7 +149,7 @@ u8 Pwd_Enroll_Process(void)
 		{
 			if (nPos == nMaxLen)//当读取位置大于6时，密码存储值清理
 			{	
-				printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos-1]);
+				//printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos-1]);
 				//提示输入的数目超过定数，重新输入
 
 				
@@ -166,7 +166,7 @@ u8 Pwd_Enroll_Process(void)
 
 			pcRet[nPos] = nKey;
 
-			printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos]);
+			//printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos]);
 			nPos++;
 			if(nPos <MAX_PWD_BYTE_LENS)//不能超过最大值，防止数组泄露
 			{
@@ -174,7 +174,7 @@ u8 Pwd_Enroll_Process(void)
 			}
 			
 
-			printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos-1]);
+			//printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos-1]);
 
 			for (i=0; i<nPos; i++)
 			{
@@ -222,7 +222,7 @@ u8 Pwd_Identify_Process(void)
 				//uiLcdMediumPrintf(row, col1 + i, FALSE, "*");
 				//uiLcdMediumString("*", 2, 5+i,0);
 
-				printf("pcRet== %d \r\n",nPos);
+				//printf("pcRet== %d \r\n",nPos);
 				//在这里比对
 				if(PwdVerify(pcRet))
 				{
@@ -245,7 +245,7 @@ u8 Pwd_Identify_Process(void)
 				continue;
 				
 			}
-			printf("nPos== %d \r\n",nPos);
+			//printf("nPos== %d \r\n",nPos);
 			//提示输入的数目不够
 			
 			continue;
@@ -267,7 +267,7 @@ u8 Pwd_Identify_Process(void)
 				continue;
 			}
 			nPos--;
-			printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos]);
+			//printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos]);
 
 			for (i=0; i<nPos; i++)
 			{
@@ -285,7 +285,7 @@ u8 Pwd_Identify_Process(void)
 		{
 			if (nPos == nMaxLen)//当读取位置大于6时，密码存储值清理
 			{	
-				printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos-1]);
+				//printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos-1]);
 				//提示输入的数目超过定数，重新输入
 
 				
@@ -302,7 +302,7 @@ u8 Pwd_Identify_Process(void)
 
 			pcRet[nPos] = nKey;
 
-			printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos]);
+			//printf("pcRet[%d]== %d \r\n",nPos,pcRet[nPos]);
 			nPos++;
 			if(nPos <MAX_PWD_BYTE_LENS)//不能超过最大值，防止数组泄露
 			{
@@ -310,7 +310,7 @@ u8 Pwd_Identify_Process(void)
 			}
 			
 
-			printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos-1]);
+			//printf("pcRet[%d]== %d\r\n",nPos,pcRet[nPos-1]);
 
 			for (i=0; i<nPos; i++)
 			{

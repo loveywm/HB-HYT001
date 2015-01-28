@@ -209,6 +209,7 @@ enum{
 	WTV_CLK,
 	WTV_DATA,
 	WTV_RST,
+	WTV_BUSY,
 
 	RELAY_1,
 	RELAY_2,
@@ -265,6 +266,7 @@ typedef struct
         {
             	void (*SetBeep)(bool status);
 		void (*HB_Gpio_Set_Value)(u8 HB_Gpio_type,u8 HB_Gpio_Value);
+		u8  (*HB_Gpio_Get_Value)(u8 HB_Gpio_type);
         }IO;
 
 	//loveywm 20140923

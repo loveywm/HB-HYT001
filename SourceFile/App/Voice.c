@@ -51,6 +51,8 @@ void Buzzer_Beep(u8 nBeepTimes, u16 nMiliSecond)
 
 void WTV_Voice(u8 addr)
 {     
+   //if(System.Device.IO.HB_Gpio_Get_Value(WTV_BUSY) ==1)
+   {	
 	char i;
       	WTV_RST_L;//rst=0;	
 	//delay_ms(5);//wait_5ms( ); // 5ms  
@@ -80,4 +82,5 @@ void WTV_Voice(u8 addr)
 	}
 	WTV_CS_H;//cs=1;
 	//_SEI();//TR0=1
+   }
 }

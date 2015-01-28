@@ -1,7 +1,7 @@
 #ifndef __UIFONT_H__
 #define __UIFONT_H__
 
-#define MAX_UI  11+2+6+4+1  //菜单文件含有的项目和
+#define MAX_UI  11+2+6+4+2  //菜单文件含有的项目和
 
 typedef enum
 {
@@ -76,6 +76,8 @@ enum
 
 	UISTR_CALL_SET_FENJI=110,//分机
 
+	UISTR_UI_GUODA=112,//过大
+
 	
 };
 
@@ -109,6 +111,8 @@ enum
 
 	UISTR_MENU_CALL_SET_UI,//楼层学习界面
 	UISTR_MENU_CALL_SET_DEL,//楼层删除界面
+
+	UISTR_MENU_ZAIZHONG_SET_KONGZAIZHONGLIANG,//空载重量
 
 };
 
@@ -149,6 +153,8 @@ enum
 
 	UISTR_XXX_TINGZHIYILOU=78,//请务必停至一楼！
 	UISTR_XXX_CHENGGONG=86,//成功
+
+	UISTR_XXX_KONGZAI=88,//空载
 
 };
 

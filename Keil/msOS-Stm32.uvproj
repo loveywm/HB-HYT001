@@ -12,14 +12,14 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32F103R8</Device>
+          <Device>STM32F103VE</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <Cpu>IROM(0x08000000,0x10000) IRAM(0x20000000,0x5000) CPUTYPE("Cortex-M3") CLOCK(72000000) ELITTLE</Cpu>
+          <Cpu>IROM(0x08000000,0x80000) IRAM(0x20000000,0x10000) CPUTYPE("Cortex-M3") CLOCK(72000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_128 -FS08000000 -FL010000 -FP0($$Device:STM32F103R8$Flash\STM32F10x_128.FLM))</FlashDriverDll>
-          <DeviceId>4232</DeviceId>
-          <RegisterFile>$$Device:STM32F103R8$Device\Include\stm32f10x.h</RegisterFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_512 -FS08000000 -FL080000 -FP0($$Device:STM32F103VE$Flash\STM32F10x_512.FLM))</FlashDriverDll>
+          <DeviceId>4225</DeviceId>
+          <RegisterFile>$$Device:STM32F103VE$Device\Include\stm32f10x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -29,7 +29,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F103R8$SVD\STM32F103xx.svd</SFDFile>
+          <SFDFile>$$Device:STM32F103VE$SVD\STM32F103xx.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -274,12 +274,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x5000</Size>
+                <Size>0x10000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x80000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -304,7 +304,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x80000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -329,7 +329,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x5000</Size>
+                <Size>0x10000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -355,7 +355,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
+              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
               <IncludePath>..\SourceFile\App;..\SourceFile\System;..\SourceFile\System\Device;..\SourceFile\System\Device\Drive;..\SourceFile\System\Device\Drive\CMSIS;..\SourceFile\System\Device\Drive\LIB\inc;..\SourceFile\System\OS;..\SourceFile\System\OS\msOS;..\SourceFile\System\GUI;C:\Keil\ARM\ARMCC\include</IncludePath>
             </VariousControls>
@@ -494,11 +494,6 @@
               <FilePath>..\SourceFile\System\Device\device_key.c</FilePath>
             </File>
             <File>
-              <FileName>device_lcd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SourceFile\System\Device\device_lcd.c</FilePath>
-            </File>
-            <File>
               <FileName>device_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SourceFile\System\Device\device_rtc.c</FilePath>
@@ -527,11 +522,6 @@
               <FileName>device_systick.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SourceFile\System\Device\device_systick.c</FilePath>
-            </File>
-            <File>
-              <FileName>device_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SourceFile\System\Device\device_led.c</FilePath>
             </File>
             <File>
               <FileName>device_lcd_12864.c</FileName>
@@ -584,9 +574,9 @@
               <FilePath>..\SourceFile\System\Device\Drive\CMSIS\system_stm32f10x.c</FilePath>
             </File>
             <File>
-              <FileName>startup_stm32f10x_md.s</FileName>
+              <FileName>startup_stm32f10x_hd.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\SourceFile\System\Device\Drive\CMSIS\STARTUP\startup_stm32f10x_md.s</FilePath>
+              <FilePath>..\SourceFile\System\Device\Drive\CMSIS\STARTUP\startup_stm32f10x_hd.s</FilePath>
             </File>
           </Files>
         </Group>
