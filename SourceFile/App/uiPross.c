@@ -655,7 +655,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 						
 
 		case UISTR_MENU_PINGCHENG_SET_UP_BUCHANG://上升补偿
-			nValue = uiProcBoxNumber(&bRet, row, 12, 220, 0, 999, 3, 3, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, 220, 0, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -663,7 +663,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_DOWN_BUCHANG://下降补偿
-			nValue = uiProcBoxNumber(&bRet, row, 12, 350, 0, 999, 3, 3, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, 350, 0, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -671,7 +671,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_OTHER_BUCHANG://其他补偿
-			nValue = uiProcBoxNumber(&bRet, row, 12, 0, 0, 999, 3, 3, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, 0, 0, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -679,13 +679,21 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR://最大楼层
-			nValue = uiProcBoxNumber(&bRet, row, 12, 25,1, 50, 2, 2, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 13, 25,1, 50, 2, 2, TRUE);
 			if (bRet) 
 			{
 				
 				App.Max_floor= (u8)nValue;
 			}
                 		break;
+/*		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR_COUNT://由高速切换到低速的编码值
+			nValue = uiProcBoxNumber(&bRet, row, 12, 3000,0, 9999, 4,4, TRUE);
+			if (bRet) 
+			{
+				
+				App.Floor_Count_Max= nValue;
+			}
+                		break;*/
 		default:
 			//uiLcdFatalError("HAS_VALUE!");
 			break;
@@ -951,9 +959,11 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_OTHER_BUCHANG, (1+i)*2, HEAD_LEN, 4);
 				break;
 			case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
-			
 				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_MAX_FLOOR, (1+i)*2, HEAD_LEN, 4);
 				break;
+			//case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR_COUNT://由高速切换到低速的编码值
+				//uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_MAX_FLOOR, (1+i)*2, HEAD_LEN, 4);
+				//break;
 				
 			//载重设置下的显示
 			case UISTR_MENU_ZAIZHONG_SET_EDINGZHONGLIANG:
@@ -1134,7 +1144,8 @@ void uiProcMenuSettingEnd(int nPopupMenuTitle)
 		{
 			bSave0 = TRUE;
 			//HB_Send_CMD_DATA4(CMD_LEVELING_DATA_OTHER_BUCHANG,App.Other_buchang);
-		}		
+		}	
+	
 	}
 	
 	if(bSave0 == TRUE)
@@ -1671,10 +1682,9 @@ void uiProcMain(void)
 	u8 nKey;
 	u32 Time_tmp;
 	u32 Time_tmp1;
+	u32 Time_tmp2;
 	u32  Floor_CurrentCount_pre;
-	//u8 ywm;
 	u16 ad_temp;
-//	float temp;
 	static  u32 fuck_count=0;
 	static  u8  fuck_flag=0;//当前平层值已保存的标志==0是没有 ==1是有
 
@@ -1709,7 +1719,7 @@ void uiProcMain(void)
 	
 	Time_tmp =uiTimeGetTickCount();
 	Time_tmp1 =uiTimeGetTickCount();
-	
+	Time_tmp2 = Time_tmp1;
 	while(1)
 	{
 		Floor_CurrentCount_pre = Floor_CurrentCount;
@@ -1728,7 +1738,11 @@ void uiProcMain(void)
                	 {
 
                        	 //以后每隔2s钟上传一次
-                    	Handle_Weight(&Parameter);//重量值采集和处理
+                       	if(App.Weight.weight_display_change_flg ==1)
+			{
+				Handle_Weight(&Parameter);//重量值采集和处理
+			}
+                    	
                         	Time_tmp =uiTimeGetTickCount();
 
 			
@@ -1755,9 +1769,7 @@ void uiProcMain(void)
 				fuck_flag =0;
 			}
 
-			//Handle_Voltage();
-
-			
+			//Handle_Voltage(); 	
 
                   }
 
@@ -1766,6 +1778,8 @@ void uiProcMain(void)
 			if(uiTimeGetTickCount() -Time_tmp1 > 700)//7s后闭合
                	 	{
 
+				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
+				
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_1,1);//上升
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_2,1);//下降
 				HB_RELAY_Close_Flag = 0;
@@ -1779,18 +1793,27 @@ void uiProcMain(void)
 			
 		//Handle_Master(&Parameter);
 
+		 if(uiTimeGetTickCount() -Time_tmp2 >50)//500ms更新一次图标
+               	 {
+			if(Floor_CurrentCount_pre >Floor_CurrentCount)
+			{
+				//Floor_CurrentCount_diff = Floor_CurrentCount_pre-Floor_CurrentCount;
+				uiLcd_1616_ch(4,2,57,1);//显示下降图标
+			}else if(Floor_CurrentCount_pre < Floor_CurrentCount)
+			{
+				//Floor_CurrentCount_diff = Floor_CurrentCount-Floor_CurrentCount_pre;
+				uiLcd_1616_ch(3,2,57,1);//显示上升图标
+			}else
+			{
+				uiLcd_1616_ch(5,2,57,1);//显示清空
+			}
+			
+			Time_tmp2 = uiTimeGetTickCount();
+		}
+
 		uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
 		
-		if(Floor_CurrentCount_pre >Floor_CurrentCount)
-		{
-			uiLcd_1616_ch(4,2,57,1);//显示下降图标
-		}else if(Floor_CurrentCount_pre < Floor_CurrentCount)
-		{
-			uiLcd_1616_ch(3,2,57,1);//显示上升图标
-		}else
-		{
-			uiLcd_1616_ch(5,2,57,1);//显示清空
-		}
+		//uiLcdDecimal(Floor_CurrentCount_three,0,0,0,4);
 
 		uiProcMainDraw(FALSE,&Parameter);//更新显示
 		Parameter.Parameter_Change_Flag =0;

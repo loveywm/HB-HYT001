@@ -84,7 +84,8 @@ typedef struct
 
 	u32  Up_buchang;//上升补偿
 	u32	Down_buchang;//下降补偿
-	u32	Other_buchang;//其他补偿
+	u32	Other_buchang;//其他补偿//由高速切换到低速的平层编码器计数器值
+	//u32	Floor_Count_Max;
 	u8	Max_floor;//设置最高楼层
  
 }AppStruct;

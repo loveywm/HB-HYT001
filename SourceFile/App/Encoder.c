@@ -26,16 +26,14 @@ void	Encode_Read(u8 floor_num,Floor_Data  *floor_data)
 //楼层标定处理函数
 u8	Encoder_Demarcate(void)
 {
-//	char pcRet[MAX_BYTE_LENS];
 	u8 nKey;
 	Floor_Data  floor_data;
-	
 	u8 floor_num_tmp = 1;
 	u32 encoder_set_2 = 0;
 	
-	
-
-//	pcRet[0] = 0;
+	u8 pcRet[2];
+	u8 i,nPos = 0;
+	pcRet[0] = 0;
 		
 	uiLcdClear();
 	uiLcd_1212_ch(UISTR_ENCODER_FLOOR,0,4,4);//显示楼层标定
@@ -49,21 +47,24 @@ u8	Encoder_Demarcate(void)
 
 	uiLcd_1414_ch(UISTR_XXX_ESC, 6,76,2);
 	uiLcdMediumString("ESC", 3, 13,0);
+
+	uiLcdDecimal(1,1,3,0,2);//显示楼层数
 	
 	while(1)
 	{
 		//调试接口
 		uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_count ,0,9,0,7);//显示对应楼层保存的计数器值
-		uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_diff,2,9,0,7);//显示对应楼层保存的计数器值
+		//LcdDecimal(floor_tmp[floor_num_tmp-1].floor_diff,2,9,0,7);//显示对应楼层保存的计数器值
 
 
 		//显示当前编码值
 		encoder_set_2 = Floor_CurrentCount;
 		uiLcdDecimal(encoder_set_2,1,9,0,7);
- 
-		uiLcdDecimal(floor_num_tmp,1,3,0,3);//显示楼层数
 
         		nKey = uiKeyGetKey();
+				
+		if (nKey == UIKEY_NONE)
+			continue;
 		if(nKey == UIKEY_ESC)
 			break;
 		
@@ -101,13 +102,37 @@ u8	Encoder_Demarcate(void)
 			
 		}
 
-		if (nKey == UIKEY_NONE)
-			continue;
-		
 		if(nKey == UIKEY_MENU)//删除
 		{
 			
 		}
+		
+		if (uiKeyIsDigit(nKey))
+		{
+			pcRet[nPos] = nKey;
+			
+			if(nPos == 0)
+			{
+				floor_num_tmp = (pcRet[0]-'0');
+			}else if(nPos == 1)
+			{
+				floor_num_tmp = (pcRet[0]-'0')*10+(pcRet[1]-'0');
+			}
+			//printf("nPos== %d\r\n",nPos);
+			//printf("floor_num_tmp== %d\r\n",floor_num_tmp);
+			nPos++;
+
+			if (nPos == 2)//当读取位置大于2时,
+			{	
+				nPos = 0;
+				for (i=0; i<2; i++)
+				{	
+					pcRet[i] = '0';
+				}
+				//continue;
+			}
+		}
+		
 		if(nKey == UIKEY_DOWN)//下翻数字
 		{
 			floor_num_tmp--;
@@ -119,19 +144,14 @@ u8	Encoder_Demarcate(void)
 
 		if(floor_num_tmp < 1)
 		{
-			floor_num_tmp =App.Max_floor;
+			floor_num_tmp =1;
 		}
 	 	if(floor_num_tmp > App.Max_floor)
 		{
-			floor_num_tmp = 1;
+			floor_num_tmp = App.Max_floor;
 		}
-
-		if (uiKeyIsDigit(nKey))
-		{
-			
-		}
-		//System.Device.IO.SetBeep(0);
-	
+		
+		uiLcdDecimal(floor_num_tmp,1,3,0,2);//显示楼层数
 	}
 	return FALSE;
 
@@ -286,6 +306,9 @@ u8	Auto_Encoder_Demarcate(void)
 	uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, 4, 35+14*2,2);
 	uiLcdMediumString("?", 2 ,13,0);
 
+	uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI+2, 0, 4,2);
+	uiLcd_1414_ch(UISTR_XXX_CHAOZHI+1, 0, 4+14*2,1);
+
 	
 	while(1)
 	{
@@ -307,10 +330,14 @@ u8	Auto_Encoder_Demarcate(void)
 		{
 			if(encoder_count >floor_tmp[floor_num_tmp-1].floor_count )//上升
 			{
-				encoder_diff = encoder_count - floor_tmp[floor_num_tmp-1].floor_count;
+				encoder_diff = encoder_count - floor_tmp[floor_num_tmp-1].floor_count+App.Up_buchang;
 
-				if(encoder_diff > 1000)
+				if(encoder_diff > 5000)
 				{
+					uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, 2, 4,2);
+					uiLcd_1414_ch(UISTR_XXX_CHAOZHI, 2, 4+14*2,2);
+					//DelayMs(1000);
+					
 					continue;
 				}
 				App.Up_buchang = encoder_diff;
@@ -318,10 +345,11 @@ u8	Auto_Encoder_Demarcate(void)
 			}
 			else if(encoder_count <floor_tmp[floor_num_tmp-1].floor_count)//下降
 			{
-				encoder_diff =  floor_tmp[floor_num_tmp-1].floor_count -encoder_count ;
-				if(encoder_diff > 1000)
+				encoder_diff =  floor_tmp[floor_num_tmp-1].floor_count -encoder_count +App.Down_buchang;
+				if(encoder_diff > 5000)
 				{
-					
+					uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, 2, 4,2);
+					uiLcd_1414_ch(UISTR_XXX_CHAOZHI, 2, 4+14*2,2);
 					continue;
 				}
 				
