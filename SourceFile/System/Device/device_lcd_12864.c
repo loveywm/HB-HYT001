@@ -90,6 +90,8 @@ void InitializeLcd_12864(void)
 	System.Device.Lcd_12864.ioctl_lcd_ypos_set = ioctl_lcd_ypos_set;
 	System.Device.Lcd_12864.LCD_Data_write = LCD_Data_write;
 	System.Device.Lcd_12864.uiLcdClear = uiLcdClear;
+
+	System.Device.Lcd_12864.LCD_Init=LCD_Init;
 	
 	LCD_Init();
 	
@@ -194,6 +196,9 @@ void LCD_Init(void)
 	Delayms(50);
 	Set_RES;		//RES=1;
 	Delayms(20);
+
+/*
+	
 		LCD_Cmd_write(0xe2);//复位  14 reset
 		LCD_Cmd_write(0xAe);// 1 显示关
 		LCD_Cmd_write(0x60);
@@ -221,6 +226,33 @@ void LCD_Init(void)
 		//LCD_Cmd_write(0x40);//起始行0
 		//LCD_Cmd_write(0x60);
 		//LCD_Cmd_write(0x5c);
+
+*/
+
+  LCD_Cmd_write(0xa2);                         /* 1/9bias *///11
+  LCD_Cmd_write(0xa0);                         /* ADC select , Normal *///8
+  LCD_Cmd_write(0xc8);                         /* Common output reverse *///15
+  
+  LCD_Cmd_write(0x26);                         /* internal resistor ratio *///17
+  
+ LCD_Cmd_write(0x81);                         /* electronic volume mode set *///18
+  LCD_Cmd_write(52);  //  22                  /* electronic volume *///18
+  
+  LCD_Cmd_write(0x2c);                         //加速器打开/* V/C off, V/R off, V/F on *///16
+  DelayMs(1);					//delay50ms
+  LCD_Cmd_write(0x2e);                         //对比度调节电路打开/* V/C off, V/R off, V/F on *///16
+  DelayMs(1);					//delay50ms
+  LCD_Cmd_write(0x2f);                         //电压跟随电路打开/* V/C off, V/R off, V/F on *///16
+  DelayMs(1);					//delay50ms
+  LCD_Cmd_write(0xa6);                         //正常显示还是反白显示（整屏），此处设置为正常显示/* normal display 1=on *///9
+  LCD_Cmd_write(0xF8);				//设置加速器的速度倍率 20
+  LCD_Cmd_write(0x00);				//此处设置为2到4倍速  20
+  LCD_Cmd_write(0xaf);                         //打开显示/* display on *///1
+  LCD_Cmd_write(0x60);	//40			//
+  
+  LCD_Cmd_write(0xac);			//静态指示是关闭还是打开static indicator 19
+
+ // LCD_Cmd_write(0xa4);//10 nomal display
 		LCD_clear();
 }
 

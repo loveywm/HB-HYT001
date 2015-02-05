@@ -9,9 +9,33 @@
 #define FLAG_COL_SIX	44//Áù¸ö×ÖÊ±ÏÔÊ¾
 
 
+static u8 fuck_count =0;//Á¬ĞøÈı´Î³¬ÖØ¾Í»á¹Ø±Õ
+
 extern const T_UI_MENUITEM g_uiMenuItemsSrc[MAX_UI];
 
 T_UI_MENUITEM	g_uiMenuItems[sizeof(g_uiMenuItemsSrc) / sizeof(g_uiMenuItemsSrc[0])];
+
+
+//ÓÃÓÚ×´Ì¬×Ô¼ìÏÔÊ¾ĞÅÏ¢
+void Machine_Info(void)
+{
+	u8 nKey;
+	uiLcdClear();
+	//ÏÔÊ¾Éè±¸ĞÅÏ¢
+	//uiLcdSmallString("Kg", row*2+1, 19, 0);
+	uiLcdMediumString("V1.0.150204", 0, 0, 0);//20150204Åú´Î
+
+	uiLcdSmallString("TEL:0579-85232071", 7, 0, 0);//20150204Åú´Î
+
+	while(1)
+	{
+        		nKey = uiKeyGetKey();
+		if(nKey == UIKEY_ESC)
+			break;
+	}
+
+}
+
 
 
 u8 uiKeyIsDigit(u8 nKey)
@@ -206,32 +230,36 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*´ı»ú½çÃæµÄÏÔÊ¾*
 		uiLcdClear();
 		//uiLcdSmallString("whatbook",0,0,0);
 		
-		uiLcd_1212_ch(UISTR_HENGBANGKEJI,0,4+12*3,4);
+		//uiLcd_1212_ch(UISTR_HENGBANGKEJI,0,4+12*3,4);
 		
-		uiLcd_1212_ch(UISTR_CURRENT_LOU_CHENG,0+2,4,2);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡±
-		uiLcd_1212_ch(UISTR_CURRENT_LOU_CHENG+3,0+2,4+12*2,1);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡±
+		//uiLcd_1212_ch(UISTR_CURRENT_LOU_CHENG,0+2,4,4);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡±
+		//uiLcd_1212_ch(UISTR_CURRENT_LOU_CHENG+3,0+2,4+12*2,1);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡±
+		uiLcd_1414_ch(UISTR_XXX_DANGQIAN, 2, 4, 2);
+		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG+2, 2, 4+14*2, 2);
 
 		
-		uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,0+2,76,2);//ÏÔÊ¾¡°Ä¿±êÂ¥²ã¡±
-		uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,0+2,76+12*2,1);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡
+		uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,0+2,76,4);//ÏÔÊ¾¡°Ä¿±êÂ¥²ã¡±
+		//uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,0+2,76+12*2,1);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡
+		uiLcd_1414_ch(UISTR_XXX_MUBIAO, 2, 70, 2);
+		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG+2, 2, 70+14*2, 2);
 
 		
-		uiLcdMediumString("00",0+1,5,0);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡±Êı×Ö
-		uiLcdMediumString("11",0+1,14,1);//ÏÔÊ¾¡°Ä¿±êÂ¥²ã¡±Êı×Ö
+		uiLcdMediumString("00",0+2,3,0);//ÏÔÊ¾¡°µ±Ç°Â¥²ã¡±Êı×Ö
+		uiLcdMediumString("11",0+2,12,1);//ÏÔÊ¾¡°Ä¿±êÂ¥²ã¡±Êı×Ö
 		
 		//uiLcd_1212_ch(UISTR_WEIGHT,4,4,3);//ÏÔÊ¾¡°µõÖØ£º¡±
 		//uiLcd_1616_ch(0,2+2,0,3);//ÏÔÊ¾¡°µõÖØ£º¡±
-		uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, 4, 2, 2);
-		uiLcdMediumString(":",1+1,4,0);//Ã°ºÅ
+		uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, 4+2, 4, 2);
+		uiLcdMediumString(":",1+2,4,0);//Ã°ºÅ
 		
-		uiLcdMediumString("0.00",1+1,5,0);//Õâ¸öÊıÖµÌîµõÖØÊµÊ±Êı¾İ
-		uiLcdMediumString("T",1+1,9,0);
+		uiLcdMediumString("0.00",1+2,5,0);//Õâ¸öÊıÖµÌîµõÖØÊµÊ±Êı¾İ
+		uiLcdMediumString("T",1+2,9,0);
 		
 		//uiLcdMediumString("100",2,11,0);//Õâ¸öÊıÖµÌîµõÖØ°Ù·Ö±È
 		//uiLcdMediumString("%",2,14,0);
 		
 		//ÓÃÓÚÏÔÊ¾ºô½ĞÂ¥²ã
-		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 4+2, 2, 4);
+		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 0, 4, 4);
 		return ;
 	}
 
@@ -239,33 +267,41 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*´ı»ú½çÃæµÄÏÔÊ¾*
 	 //ÏÔÊ¾ºô½ĞµÄÂ¥²ãÊı
 	for(ywm=0;ywm<3;ywm++)
 	{
-		if(uiTimeGetTickCount() - HB_Floor_Call_Buff[ywm].Call_Time_Count < 300)//3//3sÄÚÏÔÊ¾
+		if(uiTimeGetTickCount() - HB_Floor_Call_Buff[ywm].Call_Time_Count < 3000)//3//3sÄÚÏÔÊ¾
 		{
-			uiLcdDecimal(HB_Floor_Call_Buff[ywm].Call_num,2+1,8+(ywm*3),0,2);
+			uiLcdDecimal(HB_Floor_Call_Buff[ywm].Call_num,0,8+(ywm*3),0,2);
 		}
 		else
 		{
 			HB_Floor_Call_Buff[ywm].Call_flag = 0;
 			HB_Floor_Call_Buff[ywm].Call_num = 0;
-			uiLcdLineErase8x16(2+1,8+(ywm*3),8+(ywm*3)+3,0);//½«ÏÈÇ°×´Ì¬²Á³ı
+			uiLcdLineErase8x16(0,8+(ywm*3),8+(ywm*3)+3,0);//½«ÏÈÇ°×´Ì¬²Á³ı
 		}
 	}
 	
 	//ÏÔÊ¾Ä¿±êÂ¥²ã
-	uiLcdDecimal(Target_F,0+1,14,1,2);
+	//uiLcdDecimal(Target_F,0+2,12,0,2);
+	if(Cursor_Flag == 1)
+	{
+		uiLcdDecimal(Target_F,0+2,12,0,2);
+	}
+	else
+	{
+		uiLcdDecimal(Target_F,0+2,12,1,2);
+	}
 
 	//ÏÔÊ¾µ±Ç°Â¥²ã
 	for(ywm=0;ywm<App.Max_floor-1;ywm++)
 	{
 		if(Floor_CurrentCount < (floor_tmp[ywm].floor_count+(floor_tmp[ywm+1].floor_diff/2)))
 		{
-			uiLcdDecimal(ywm+1,0+1,5,0,2);
+			uiLcdDecimal(ywm+1,0+2,3,0,2);
 			break;
 		}
 	}
 	if(Floor_CurrentCount > (floor_tmp[App.Max_floor-2].floor_count+(floor_tmp[App.Max_floor-1].floor_diff/2)))
 	{
-		uiLcdDecimal(App.Max_floor,0+1,5,0,2);
+		uiLcdDecimal(App.Max_floor,0+2,3,0,2);
 	}
 
 
@@ -274,12 +310,12 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*´ı»ú½çÃæµÄÏÔÊ¾*
 
 		if((Parameter->Parameter_Change_Position)&(WEITHT))
 		{
-			uiLcdDecimal(Parameter->Weight_Integer,1+1,5,0,1);
+			uiLcdDecimal(Parameter->Weight_Integer,1+2,5,0,1);
 
-			uiLcdMediumString(".",1+1,6,0);
+			uiLcdMediumString(".",1+2,6,0);
 	
-			uiLcdDecimal(Parameter->Weight_Decimal,1+1,7,0,1);
-			uiLcdDecimal(Parameter->Weight_Percentile,1+1,8,0,1);
+			uiLcdDecimal(Parameter->Weight_Decimal,1+2,7,0,1);
+			uiLcdDecimal(Parameter->Weight_Percentile,1+2,8,0,1);
 			
 			//ÏÔÊ¾°Ù·Ö±È
 			//uiLcdDecimal(Parameter->Weight_Percentage,2,11,0,3);
@@ -364,6 +400,7 @@ static u8  Handle_Voltage(void)
 static u8  Handle_Weight(Menu_Parameter *Parameter)
 {
 	u32 ad_temp,operate_temp;
+	
 
 	//»ñÈ¡ÖØÁ¿µÄADÖµ
 	Weight_Value = ADC_Filter();
@@ -407,22 +444,34 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	//ÔÚÕâÀï½øĞĞ±¨¾¯ºÍÔ¤¾¯ÅĞ¶Ï
 	if(ad_temp >(App.Weight.Rated_weight*App.Weight.Warning_weight/100))//³¬¹ıÔ¤¾¯Öµ
 	{
-		uiLcdLineErase8x16(2,10,16,0);//½«ÏÈÇ°×´Ì¬²Á³ı
+		uiLcdLineErase8x16(3,10,17,0);//½«ÏÈÇ°×´Ì¬²Á³ı
 		//ÌáÊ¾Ô¤¾¯
-		uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 4,84, 1);
-		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 4,96, 3);
+		uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 6,84, 1);
+		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 6,96, 3);
 		
 		if(ad_temp >(App.Weight.Rated_weight*App.Weight.Alarm_weight/100))//³¬¹ı±¨¾¯Öµ
 		{
 			//ÌáÊ¾±¨¾¯
-			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI, 4, 84, 3);
-			uiLcdLineErase8x16(2,15,16,0);
+			uiLcdLineErase8x16(3,10,17,0);
+			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI, 6, 84, 3);
+			//uiLcdLineErase8x16(3,15,16,0);
+			fuck_count++;
+			if(fuck_count >=3)
+			{
+				System.Device.IO.HB_Gpio_Set_Value(RELAY_4,0);//³¬ÔØ´ò¿ª
+			}
 			
+		}else
+		{
+			fuck_count=0;
+			System.Device.IO.HB_Gpio_Set_Value(RELAY_4,1);//³¬ÔØ±ÕºÏ
 		}
 	}
 	else
 	{
-		uiLcdLineErase8x16(2,10,16,0);//½«ÏÈÇ°×´Ì¬²Á³ı
+		uiLcdLineErase8x16(3,10,17,0);//½«ÏÈÇ°×´Ì¬²Á³ı
+		fuck_count=0;
+		System.Device.IO.HB_Gpio_Set_Value(RELAY_4,1);//³¬ÔØ±ÕºÏ
 	}
 	
 	Parameter->Weight_Integer = (u8)(ad_temp/1000);
@@ -613,7 +662,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 	switch(pUiMenuItem->nMenuStr)
 	{
 		case UISTR_MENU_ZAIZHONG_SET_EDINGZHONGLIANG:
-			nValue = uiProcBoxNumber(&bRet, row, 10, 2000, 1, 5000, 4, 4, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 10, App.Weight.Rated_weight, 1, 5000, 4, 4, TRUE);
 			if (bRet) 
 			{
 				//gsSetting.bLockEn = nValue;
@@ -621,7 +670,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_ZAIZHONG_SET_YUJINGZAIHE:
-			nValue = uiProcBoxNumber(&bRet, row, 12, 90, 1, 100, 3, 3, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, App.Weight.Warning_weight, 1, 100, 3, 3, TRUE);
 			if (bRet) 
 			{
 				//gsSetting.bLockEn = nValue;
@@ -629,7 +678,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_ZAIZHONG_SET_BAOJINGZAIHE://±¨¾¯ÔØºÉ
-			nValue = uiProcBoxNumber(&bRet, row, 12, 110, 1, 120, 3, 3, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, App.Weight.Alarm_weight, 1, 120, 3, 3, TRUE);
 			if (bRet) 
 			{
 				//gsSetting.bLockEn = nValue;
@@ -637,7 +686,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_ZAIZHONG_SET_ZHONGLIANGZHILING://ÖØÁ¿ÖÃÁã
-			nValue = uiProcBoxNumber(&bRet, row, 11, 0, 0, 1, 1, 1, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 11, App.Weight.weight_display_change_flg, 0, 1, 1, 1, TRUE);
 			if (bRet) 
 			{
 				//gsSetting.bLockEn = nValue;
@@ -645,7 +694,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_ZAIZHONG_SET_KONGZAIZHONGLIANG://¿ÕÔØÖØÁ¿
-			nValue = uiProcBoxNumber(&bRet, row, 10, 1200, 1, 2000, 4, 4, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 10, App.Weight.Empty_weight, 1, 2000, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -655,7 +704,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 						
 
 		case UISTR_MENU_PINGCHENG_SET_UP_BUCHANG://ÉÏÉı²¹³¥
-			nValue = uiProcBoxNumber(&bRet, row, 12, 220, 0, 9999, 4, 4, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, App.Up_buchang, 0, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -663,7 +712,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_DOWN_BUCHANG://ÏÂ½µ²¹³¥
-			nValue = uiProcBoxNumber(&bRet, row, 12, 350, 0, 9999, 4, 4, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, App.Down_buchang, 0, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -671,7 +720,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_OTHER_BUCHANG://ÆäËû²¹³¥
-			nValue = uiProcBoxNumber(&bRet, row, 12, 0, 0, 9999, 4, 4, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, 0, App.Other_buchang, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -679,7 +728,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR://×î´óÂ¥²ã
-			nValue = uiProcBoxNumber(&bRet, row, 13, 25,1, 50, 2, 2, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 13, App.Max_floor,1, 50, 2, 2, TRUE);
 			if (bRet) 
 			{
 				
@@ -717,10 +766,16 @@ void uiProcMenuCustom(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row)
 			Pwd_Enroll_Process();
 			break;
 		case UISTR_MENU_ZAIZHONG_SET_BIAODINGDIAN_ONE://ÉèÖÃ±ê¶¨µãÒ»
-			Load_Set_Calibration(1);
+			//Load_Set_Calibration(1);
+			if(Load_Set_Calibration_tmp(1) == 1)
+			{
+				get_weight_clear_value();
+			}
+		
 			break;
 		case UISTR_MENU_ZAIZHONG_SET_BIAODINGDIAN_TWO://ÉèÖÃ±ê¶¨µã¶ş
-			if(Load_Set_Calibration(2) == 1)
+			//if(Load_Set_Calibration(2) == 1)
+			if(Load_Set_Calibration_tmp(2) == 1)
 			{
 				get_weight_clear_value();
 			}
@@ -732,8 +787,16 @@ void uiProcMenuCustom(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row)
 
 			//Encoder_Demarcate_Init();
 			break;
+		case UISTR_MENU_PINGCHENG_QUANSHAN://Æ½²ã±ê¶¨É¾³ı
+			Encoder_Demarcate_Del();
+
+			//Encoder_Demarcate_Init();
+			break;
 		case UISTR_MENU_PINGCHENG_SET_UI_ZIDONG://×Ô¶¯Æ½²ã±ê¶¨½çÃæ
 			Encoder_Demarcate_Init();
+			break;
+		case UISTR_MENU_PINGCHENG_ZIDONGBUCANG://×Ô¶¯²¹³¥
+			Auto_Encoder_Demarcate();
 			break;
 			
 		case UISTR_MENU_CALL_SET_UI://Â¥²ãÑ§Ï°½çÃæ
@@ -744,7 +807,8 @@ void uiProcMenuCustom(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row)
 			break;
 
 		case UISTR_MENU_ZIJIAN_SET://×´Ì¬×Ô¼ì¾ÍÊÇÏÔÊ¾µ±Ç°ÖØÁ¿Öµ
-			weight_flag();
+			Machine_Info();
+			
 			break;
 		default:
 			break;
@@ -800,19 +864,19 @@ void uiProcMenuDrawValue(T_UI_MENUITEM *pUiMenuItem, int row, BOOL bIsReverse)
 
 		//Æ½²ã²¿·Ö
 		case UISTR_MENU_PINGCHENG_SET_UP_BUCHANG:
-			uiLcdDecimal(App.Up_buchang, row, 12, 0, 3);
+			uiLcdDecimal(App.Up_buchang, row, 12, 0, 4);
 		
 			break;
 		case UISTR_MENU_PINGCHENG_SET_DOWN_BUCHANG:
-			uiLcdDecimal(App.Down_buchang, row, 12, 0, 3);
+			uiLcdDecimal(App.Down_buchang, row, 12, 0, 4);
 		
 			break;
 		case UISTR_MENU_PINGCHENG_SET_OTHER_BUCHANG:
-			uiLcdDecimal(App.Other_buchang, row, 12, 0, 3);
+			uiLcdDecimal(App.Other_buchang, row, 12, 0, 4);
 			
 			break;
 		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
-			uiLcdDecimal(App.Max_floor, row, 12, 0, 2);
+			uiLcdDecimal(App.Max_floor, row, 13, 0, 2);
 			
 			break;
 		
@@ -939,8 +1003,12 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 
 			//Æ½²ãÉèÖÃÏÂµÄÏÔÊ¾
 			case UISTR_MENU_PINGCHENG_SET_UI://ÊÖ¶¯Æ½²ã±ê¶¨½çÃæ
-				uiLcd_1414_ch(UISTR_XXX_SHOUDONG, (1+i)*2, HEAD_LEN, 2);
-				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN+14*2, 6);
+				//uiLcd_1414_ch(UISTR_XXX_SHOUDONG, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN, 6);
+				break;
+			case UISTR_MENU_PINGCHENG_ZIDONGBUCANG://×Ô¶¯²¹³¥
+				uiLcd_1414_ch(UISTR_XXX_ZIDONG, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, (1+i)*2, HEAD_LEN+14*2, 2);
 				break;
 			case UISTR_MENU_PINGCHENG_SET_UI_ZIDONG://×Ô¶¯Æ½²ã±ê¶¨½çÃæ
 				uiLcd_1414_ch(UISTR_XXX_ZIDONG, (1+i)*2, HEAD_LEN, 2);
@@ -961,15 +1029,18 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 			case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
 				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_MAX_FLOOR, (1+i)*2, HEAD_LEN, 4);
 				break;
-			//case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR_COUNT://ÓÉ¸ßËÙÇĞ»»µ½µÍËÙµÄ±àÂëÖµ
-				//uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_MAX_FLOOR, (1+i)*2, HEAD_LEN, 4);
-				//break;
+			case UISTR_MENU_PINGCHENG_QUANSHAN://Æ½²ã±ê¶¨È«É¾
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1414_ch(UISTR_XXX_QUANBU, (1+i)*2, HEAD_LEN+14*4,1);
+				uiLcd_1414_ch(UISTR_XXX_SHANCHU, (1+i)*2, HEAD_LEN+14*5,1);
+				break;
 				
 			//ÔØÖØÉèÖÃÏÂµÄÏÔÊ¾
 			case UISTR_MENU_ZAIZHONG_SET_EDINGZHONGLIANG:
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_EDINGZHONGLIANG, (1+i)*2, HEAD_LEN, 4);
 				//uiLcd_1616_ch(UISTR_XXX_ZAIZHONG_SET_EDINGZHONGLIANG, (1+i)*2, HEAD_LEN, 4);
-				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_EDINGZHONGLIANG, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_EDINGZHONGLIANG, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_YUJINGZAIHE+2, (1+i)*2, HEAD_LEN+14*2, 2);
 				break;
 			case UISTR_MENU_ZAIZHONG_SET_YUJINGZAIHE:
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_YUJINGZAIHE, (1+i)*2, HEAD_LEN, 4);
@@ -980,17 +1051,18 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_BAOJINGZAIHE, (1+i)*2, HEAD_LEN, 4);
 				break;
 				
-			case UISTR_MENU_ZAIZHONG_SET_BIAODINGDIAN_ONE://ÉèÖÃ±ê¶¨µãÒ»
+			case UISTR_MENU_ZAIZHONG_SET_BIAODINGDIAN_ONE://ÉèÖÃ±ê¶¨µãÒ»,Êµ¼ÊÊÇÖØÁ¿ÖÃÁã
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
-				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_BIAODINGDIAN_ONE, (1+i)*2, HEAD_LEN, 6);
+				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
 				break;
 			case UISTR_MENU_ZAIZHONG_SET_BIAODINGDIAN_TWO://ÉèÖÃ±ê¶¨µã¶ş
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
-				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_BIAODINGDIAN_TWO, (1+i)*2, HEAD_LEN, 6);
+				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_BIAODINGDIAN_TWO, (1+i)*2, HEAD_LEN, 5);
 				break;		
 			case UISTR_MENU_ZAIZHONG_SET_ZHONGLIANGZHILING:
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
-				uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1414_ch(UISTR_XXX_SHIFOU, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_SHIYONG, (1+i)*2, HEAD_LEN+14*2, 2);
 				break;
 			case UISTR_MENU_ZAIZHONG_SET_KONGZAIZHONGLIANG://¿ÕÔØÖØÁ¿
 				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 4);
@@ -1508,7 +1580,7 @@ void HB_RELAY_Mode(void)
             if(Floor_CurrentCount > Floor_TargetCount)//ÏòÏÂÔËĞĞ
             {
                      HB_RELAY_Flag = 2;
-		uiLcd_1616_ch(4,2,57,1);//ÏÔÊ¾ÏÂ½µÍ¼±ê
+		uiLcd_1616_ch(4,4,57,1);//ÏÔÊ¾ÏÂ½µÍ¼±ê
 		DelayMs(1000);
 		   
 
@@ -1516,7 +1588,7 @@ void HB_RELAY_Mode(void)
             else if(Floor_CurrentCount < Floor_TargetCount)//ÏòÉÏÔËĞĞ
             {
                     HB_RELAY_Flag = 1;
-		 uiLcd_1616_ch(3,2,57,1);//ÏÔÊ¾ÉÏÉıÍ¼±ê
+		 uiLcd_1616_ch(3,4,57,1);//ÏÔÊ¾ÉÏÉıÍ¼±ê
 		 DelayMs(1000);
             }
             else//Í£Ö¹
@@ -1587,9 +1659,9 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		{
 			//½çÃæÌáÊ¾´íÎóÖµ"Ä¿±ê²ã¹ı´ó"
 	
-			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,6,66,2);
-			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,6,66+12*2,1);
-			uiLcd_1212_ch(UISTR_UI_GUODA,6,66+12*3,2);
+			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,0,66,2);
+			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,0,66+12*2,1);
+			uiLcd_1212_ch(UISTR_UI_GUODA,0,66+12*3,2);
 			DelayMs(1500);
 			
 		}
@@ -1597,6 +1669,10 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		{
 			//¶ÁÈ¡Ä¿±êÂ¥²ãµÄÆ½²ãÖµ
 			Floor_TargetCount = floor_tmp[Target_F-1].floor_count;
+
+			System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//¸ßËÙ±ÕºÏ
+			System.Device.IO.HB_Gpio_Set_Value(RELAY_1,1);//ÉÏÉı
+			System.Device.IO.HB_Gpio_Set_Value(RELAY_2,1);//ÏÂ½µ
 
 			//ÕâÀï´æÔÚÏÈºóÎÊÌâ£¬ÒªÏÈÅĞ¶ÏÔËĞĞ·½Ïò£¬ÔÙ¿ªÆôÔËĞĞ
 			HB_RELAY_Mode();
@@ -1622,7 +1698,9 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 	else if (nKey == UIKEY_DEL)//ÁÙÊ±µ÷³öÖØÁ¿µÄÊı¾İÏÔÊ¾
 	{
 		//get_weight_clear_value();
-		Auto_Encoder_Demarcate();
+		//Auto_Encoder_Demarcate();
+		weight_flag();
+		System.Device.Lcd_12864.LCD_Init();
 		uiProcMainDraw(TRUE,Parameter);
 
 	}
@@ -1645,6 +1723,12 @@ void uiProcProtocl(void)
 		{
 			if(wahh == HB_Floor_Call[xxxx].Call_Time_Count)
 			{	
+				if(System.Device.IO.HB_Gpio_Get_Value(WTV_BUSY) ==1)
+				{
+					Voice_Call(HB_Floor_Call[xxxx].Call_num);
+				}
+				
+				
 				for(i=0;i<3;i++)
 				{
 					if(HB_Floor_Call_Buff[i].Call_num == HB_Floor_Call[xxxx].Call_num)//Èç¹ûÒÑ¾­ºô½ĞÁË£¬¾Í²»ÁíĞĞÏÔÊ¾ÁË
@@ -1665,7 +1749,7 @@ void uiProcProtocl(void)
 						HB_Floor_Call_Buff[i].Call_num = HB_Floor_Call[xxxx].Call_num; 
 						HB_Floor_Call_Buff[i].Call_Time_Count = uiTimeGetTickCount();
 						
-						Voice_Call(HB_Floor_Call[xxxx].Call_num);
+						//Voice_Call(HB_Floor_Call[xxxx].Call_num);
 						
 						return;
 					}
@@ -1680,9 +1764,11 @@ void uiProcProtocl(void)
 void uiProcMain(void)
 {
 	u8 nKey;
+	u8 call_flag=0;//Â¥²ãµ½Õ¾µÄºô½Ğ±êÖ¾
 	u32 Time_tmp;
 	u32 Time_tmp1;
 	u32 Time_tmp2;
+	u32 Time_tmp3;
 	u32  Floor_CurrentCount_pre;
 	u16 ad_temp;
 	static  u32 fuck_count=0;
@@ -1720,8 +1806,11 @@ void uiProcMain(void)
 	Time_tmp =uiTimeGetTickCount();
 	Time_tmp1 =uiTimeGetTickCount();
 	Time_tmp2 = Time_tmp1;
+	Time_tmp3 = Time_tmp2;
 	while(1)
 	{
+
+
 		Floor_CurrentCount_pre = Floor_CurrentCount;
 		
 		nKey  = uiKeyGetKey();//´¦Àí°´¼üºÍÂ¥²ã
@@ -1736,7 +1825,6 @@ void uiProcMain(void)
 			 
 		 if(uiTimeGetTickCount() -Time_tmp >150)//1500ms¸üĞÂÒ»´ÎÖØÁ¿Öµ
                	 {
-
                        	 //ÒÔºóÃ¿¸ô2sÖÓÉÏ´«Ò»´Î
                        	if(App.Weight.weight_display_change_flg ==1)
 			{
@@ -1748,11 +1836,11 @@ void uiProcMain(void)
 			
 			//»ñÈ¡µçÑ¹µÄADÖµ
 			ad_temp = ADC_Filter_V();
-			//Á¬Ğø1.5s*40=60s·ÖÖÓ×óÓÒÃ»ÓĞ¼ì²âµ½µçÑ¹Ê±£¬¾Í±£´æµ±Ç°Â¥²ãÊıÖµ
+			//Á¬Ğø1.5s*20=30s×óÓÒÃ»ÓĞ¼ì²âµ½µçÑ¹Ê±£¬¾Í±£´æµ±Ç°Â¥²ãÊıÖµ
 			if(ad_temp <100)//¼ì²âµ½µÄµçÑ¹ADÖµĞ¡ÓÚ100Ê±ÈÏÎª
 			{
 				fuck_count++;
-				if(fuck_count >= 40)
+				if(fuck_count >= 4)
 				{
 					if(fuck_flag ==0)
 					{
@@ -1775,6 +1863,14 @@ void uiProcMain(void)
 
 		if(HB_RELAY_Close_Flag == 1)//´æÔÚÊÖ±ú¶Ï¿ªÁË
 		{
+			
+			if(call_flag==0)
+			{
+				WTV_Voice(DINGDONG);
+				call_flag=1;
+			}
+			
+
 			if(uiTimeGetTickCount() -Time_tmp1 > 700)//7sºó±ÕºÏ
                	 	{
 
@@ -1783,6 +1879,7 @@ void uiProcMain(void)
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_1,1);//ÉÏÉı
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_2,1);//ÏÂ½µ
 				HB_RELAY_Close_Flag = 0;
+				call_flag=0;
 				Time_tmp1 =uiTimeGetTickCount();
            
                   	}
@@ -1798,26 +1895,36 @@ void uiProcMain(void)
 			if(Floor_CurrentCount_pre >Floor_CurrentCount)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount_pre-Floor_CurrentCount;
-				uiLcd_1616_ch(4,2,57,1);//ÏÔÊ¾ÏÂ½µÍ¼±ê
+				uiLcd_1616_ch(4,4,57,1);//ÏÔÊ¾ÏÂ½µÍ¼±ê
 			}else if(Floor_CurrentCount_pre < Floor_CurrentCount)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount-Floor_CurrentCount_pre;
-				uiLcd_1616_ch(3,2,57,1);//ÏÔÊ¾ÉÏÉıÍ¼±ê
+				uiLcd_1616_ch(3,4,57,1);//ÏÔÊ¾ÉÏÉıÍ¼±ê
 			}else
 			{
-				uiLcd_1616_ch(5,2,57,1);//ÏÔÊ¾Çå¿Õ
+				uiLcd_1616_ch(5,4,57,1);//ÏÔÊ¾Çå¿Õ
 			}
 			
 			Time_tmp2 = uiTimeGetTickCount();
+			
+			
+		}
+		if(uiTimeGetTickCount() -Time_tmp3 >100)//800ms¸üĞÂÒ»´ÎÄ¿±ê²ãÉÁË¸
+               	 {
+			Cursor_Flag= !Cursor_Flag;
+			Time_tmp3 = uiTimeGetTickCount();
 		}
 
-		uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
+		//uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
 		
-		//uiLcdDecimal(Floor_CurrentCount_three,0,0,0,4);
+
 
 		uiProcMainDraw(FALSE,&Parameter);//¸üĞÂÏÔÊ¾
 		Parameter.Parameter_Change_Flag =0;
 		Parameter.Parameter_Change_Position=0;
+
+
+
 	}
 
 }

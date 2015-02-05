@@ -64,6 +64,7 @@ u8  HB_Floor_Call_Num = 0;//用于显示楼层呼叫楼层
 Call_Data    HB_Floor_Call_Buff[3];//用于显示楼层呼叫楼层buff
 Call_Data    HB_Floor_Call[MAX_FLOOR_NUM];//用于保存楼层呼叫的编码值
 
+u8 Cursor_Flag=0;//光标闪烁的全局变量
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -91,8 +92,9 @@ void HB_Run_Check_Stop(void)//检测是否需要停止
 	                    {
 	                        HB_RELAY_Flag = 0;
 	                        HB_Start_Flag = 0;
-				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开			
+				//System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开			
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_2,0);//下降断开
+				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
 				
 				//断开7s后再闭合
 				HB_RELAY_Close_Flag =1;
@@ -111,8 +113,9 @@ void HB_Run_Check_Stop(void)//检测是否需要停止
 	                    {
 	                        HB_RELAY_Flag = 0;
 	                        HB_Start_Flag = 0;
-				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开
+				//System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_1,0);//上升断开
+				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
 				
 
 				//断开7s后再闭合

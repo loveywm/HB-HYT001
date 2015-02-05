@@ -115,6 +115,9 @@ extern u16  Voltage_Tmp;//电压采样的AD值
 extern u16  Weight_Tmp;//传感器的捕捉的重量值
 extern u16  Weight_Value;////实际采集到的最后重量AD值
 
+
+extern u8 Cursor_Flag;
+
 #include "logic.h"
 
 #include "menu.h"

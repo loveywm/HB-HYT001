@@ -217,12 +217,7 @@ u8 Pwd_Identify_Process(void)
 		{
 			if (nPos == 6 )
 			{
-				//uiLcdLineErase8x16(2, 5, 10, 0);
-				//for (i=0; i<nPos; i++)
-				//uiLcdMediumPrintf(row, col1 + i, FALSE, "*");
-				//uiLcdMediumString("*", 2, 5+i,0);
-
-				//printf("pcRet== %d \r\n",nPos);
+				
 				//在这里比对
 				if(PwdVerify(pcRet))
 				{

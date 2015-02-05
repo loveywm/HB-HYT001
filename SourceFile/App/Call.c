@@ -149,15 +149,37 @@ u8 Call_Del(void)
 
 }
 
+/*			for(ywm_tmp=0;ywm_tmp<MAX_FLOOR_NUM;ywm_tmp++)
+			{
+				if(Call_num_set == HB_Floor_Call[ywm_tmp].Call_Time_Count)
+				{
+					//·Ö»úÒÑÑ§Ï°
+					uiLcd_1212_ch(UISTR_CALL_SET_FENJI, 4,12*4+4,2);
+					uiLcd_1212_ch(UISTR_START, 4,12*6+4,1);
+					uiLcd_1212_ch(UISTR_CALL_SET, 4,12*7+4,2);
+					DelayMs(1000);
+					uiLcdLineErase8x16(2,0,15,0);
+
+					//Call_num_set = 0;
+					
+					break;
+				}
+
+			}
+*/			
+
 
 //Â¥²ãºô½ÐÆ÷µÄÑ§Ï°´¦Àíº¯Êý
 u8 Call_Learn(void)
 {
 	u8 nKey;
 	u8 ywm_tmp;
-	u8 floor_num_tmp = 1;
+	u8 floor_num_tmp = 0;
 	u32 Call_num_set_tmp= 0;
 	u32 Call_num_set= 0;
+	u32 Call_num_set2= 0;
+	u32 Call_num_set3= 0;
+	u32 Call_Time;
 
 	u8 pcRet[2];
 	u8 i,nPos = 0;
@@ -176,43 +198,61 @@ u8 Call_Learn(void)
 	uiLcd_1414_ch(UISTR_XXX_SAVE, 6, 4,2);
 	uiLcdMediumString("OK", 3 ,4,0);
 
-
 	uiLcd_1414_ch(UISTR_XXX_ESC, 6,76,2);
 	uiLcdMediumString("ESC", 3, 13,0);
-	//FlushUart2();
 
-	uiLcdDecimal(1,1,3,0,3);//ÏÔÊ¾Â¥²ãÊý
-
-HB_XXX:
-	
+	uiLcdDecimal(0,1,3,0,2);//ÏÔÊ¾Â¥²ãÊý
+	Call_Time =uiTimeGetTickCount();
 	while(1)
 	{
-		Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
-		if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+		if(floor_num_tmp != 0)
 		{
-			uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
-			Call_num_set=Call_num_set_tmp;
-			for(ywm_tmp=0;ywm_tmp<MAX_FLOOR_NUM;ywm_tmp++)
+			Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
+			if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
 			{
-				if(Call_num_set == HB_Floor_Call[ywm_tmp].Call_Time_Count)
-				{
-					//·Ö»úÒÑÑ§Ï°
-					uiLcd_1212_ch(UISTR_CALL_SET_FENJI, 4,12*4+4,2);
-					uiLcd_1212_ch(UISTR_START, 4,12*6+4,1);
-					uiLcd_1212_ch(UISTR_CALL_SET, 4,12*7+4,2);
-					DelayMs(1000);
-					uiLcdLineErase8x16(2,0,15,0);
-
-					//Call_num_set = 0;
+				uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
+				Call_num_set=Call_num_set_tmp;
+				
+				DelayMs(800);
 					
-					break;
+				Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
+				if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+				{
+					uiLcdDecimal(Call_num_set_tmp,2, 2+6,0,8);
+					Call_num_set2=Call_num_set_tmp;
+
+					if(Call_num_set != Call_num_set2)
+					{
+						continue;
+					}
+
+					DelayMs(800);
+					
+					Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
+					if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+					{
+						//uiLcdDecimal(Call_num_set_tmp,2, 2+6,0,8);
+						Call_num_set=Call_num_set_tmp;
+
+						if(Call_num_set != Call_num_set2)
+						{
+							continue;
+						}
+						Call_num_set3=Call_num_set;
+						Voice_Call(floor_num_tmp);
+					}
 				}
 
 			}
 		}
+	/*	Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
+		if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+		{
+			uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
+			Call_num_set=Call_num_set_tmp;
 
-
-		
+		}
+*/
         		nKey = uiKeyGetKey();
 		if (nKey == UIKEY_NONE)
 			continue;
@@ -223,44 +263,43 @@ HB_XXX:
 		
 		if(nKey == UIKEY_OK)//µ±°´ÏÂOK¼üÊ±£¬½«¶ÔÓ¦Â¥²ã±£´æ²¢·¢ËÍ¸ø¿ØÖÆ¶Ë¸üÐÂ
 		{
-
 			Call_Data  call_data;
-
+			if(floor_num_tmp == 0)
+			{
+				continue;
+			}
+			//É¾³ýÖ®Ç°Ñ§Ï°¹ýµÄ
 			for(ywm_tmp=0;ywm_tmp<MAX_FLOOR_NUM;ywm_tmp++)
 			{
-				if(Call_num_set == HB_Floor_Call[ywm_tmp].Call_Time_Count)
+				if(Call_num_set3 == HB_Floor_Call[ywm_tmp].Call_Time_Count)
 				{
-					//·Ö»úÒÑÑ§Ï°
-					uiLcd_1212_ch(UISTR_CALL_SET_FENJI, 4,12*4+4,2);
-					uiLcd_1212_ch(UISTR_START, 4,12*6+4,1);
-					uiLcd_1212_ch(UISTR_CALL_SET, 4,12*7+4,2);
-					DelayMs(1000);
-					uiLcdLineErase8x16(2,0,15,0);
-					
-					goto  HB_XXX;
+					call_data.Call_flag = 0;//±êÖ¾Î»ÖÃ0
+					call_data.Call_num = ywm_tmp+1;//Â¥²ãÉèÖÃÕýÈ·
+					call_data.Call_Time_Count = 0;//Â¥²ã¶ÔÓ¦ÎÞÏß±àÂëµÄ±àÂëÖ
+					Call_Save(&call_data);
+					HB_Floor_Call[ywm_tmp].Call_flag=0;
+					HB_Floor_Call[ywm_tmp].Call_Time_Count =0;
+					//Flash_ReadInfo((UINT8 *)HB_Floor_Call, CALL_ADD, sizeof(Call_Data)*MAX_FLOOR_NUM);
+					break;
 				}
 
-			}
-
+			}		
 			
 			call_data.Call_flag = 1;//±êÖ¾Î»Ê¹ÓÃÁË
 			call_data.Call_num = floor_num_tmp;//Â¥²ãÉèÖÃÕýÈ·
-			call_data.Call_Time_Count = Call_num_set;//Â¥²ã¶ÔÓ¦ÎÞÏß±àÂëµÄ±àÂëÖµ
+			call_data.Call_Time_Count = Call_num_set3;//Â¥²ã¶ÔÓ¦ÎÞÏß±àÂëµÄ±àÂëÖµ
 
-	
 			Call_Save(&call_data);
 			Flash_ReadInfo((UINT8 *)HB_Floor_Call, CALL_ADD, sizeof(Call_Data)*MAX_FLOOR_NUM);
 			
-			
 			//ÌáÊ¾±£´æÕýÈ·
-			uiLcd_1414_ch(UISTR_XXX_SAVE, 4,14*2+4,2);
-			uiLcd_1414_ch(UISTR_XXX_SUCESS, 4,14*4+4,2);
+			uiLcd_1414_ch(UISTR_XXX_SAVE, 4,4,2);
+			uiLcd_1414_ch(UISTR_XXX_SUCESS, 4,4+14*2,2);
 			DelayMs(1000);
-			uiLcdLineErase8x16(2,0,15,0);
+			uiLcdLineErase8x16(2,0,16,0);
 			
 		}
-
-		
+	
 		if (uiKeyIsDigit(nKey))
 		{
 			pcRet[nPos] = nKey;
@@ -301,13 +340,13 @@ HB_XXX:
 
 		if(floor_num_tmp < 1)
 		{
-			floor_num_tmp =1;
+			floor_num_tmp =0;
 		}
 	 	if(floor_num_tmp > App.Max_floor)
 		{
 			floor_num_tmp = App.Max_floor;
 		}
-		uiLcdDecimal(floor_num_tmp,1,3,0,3);//ÏÔÊ¾Â¥²ãÊý
+		uiLcdDecimal(floor_num_tmp,1,3,0,2);//ÏÔÊ¾Â¥²ãÊý
 	
 	}
 	return FALSE;

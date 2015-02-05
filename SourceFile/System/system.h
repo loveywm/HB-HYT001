@@ -297,6 +297,7 @@ typedef struct
 		    void (*ioctl_lcd_ypos_set)( int data, int devid );
 		    void (*LCD_Data_write)(u8 dat);
 		    void (*uiLcdClear)(void);
+		    void (*LCD_Init)(void);
 	    }Lcd_12864;
         
         struct Usart1
