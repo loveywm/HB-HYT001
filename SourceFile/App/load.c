@@ -14,6 +14,7 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 	int i, nPos = 0;
 	u8 nMaxLen = MAX_LOAD_BYTE_LENS;
 	u16 weignt_value_tmp;
+	u16 weignt_value_tmp_back;
 	pcRet[0] = 0;
 	
 	uiLcdClear();
@@ -45,7 +46,27 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 		
 		//得到重量的AD值
 		weignt_value_tmp	= ADC_Filter();
-		uiLcdDecimal(weignt_value_tmp,LOAD_ROW, LOAD_COL+7,0,4);
+
+		//减少刷新频率
+		if(weignt_value_tmp>weignt_value_tmp_back)
+		{
+			if((weignt_value_tmp-weignt_value_tmp_back) >2)
+			{
+				uiLcdDecimal(weignt_value_tmp,LOAD_ROW, LOAD_COL+7,0,4);
+			}
+		}else if(weignt_value_tmp_back>weignt_value_tmp)
+		{
+			if((weignt_value_tmp_back-weignt_value_tmp) >2)
+			{
+				uiLcdDecimal(weignt_value_tmp,LOAD_ROW, LOAD_COL+7,0,4);
+			}
+		}
+		else
+		{
+
+		}
+		
+		weignt_value_tmp_back = weignt_value_tmp;
 		
         		nKey = uiKeyGetKey();
 		if(nKey == UIKEY_ESC)

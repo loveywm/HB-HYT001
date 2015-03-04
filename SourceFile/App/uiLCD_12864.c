@@ -238,6 +238,33 @@ void uiLcd_1414_ch(u8 address,u8 row,u8 col,u8 num)
 	}
 }
 
+
+//ÐÐ01 23 45 67 
+//ÁÐ0~128
+//
+void uiLcd_1416_ch(u8 address,u8 row,u8 col,u8 num)
+{
+	int i,j;	
+	for(j=0;j<num;j++)
+	{	
+		System.Device.Lcd_12864.ioctl_lcd_xpos_set (row,1);
+		System.Device.Lcd_12864.ioctl_lcd_ypos_set (col+j*12,1);
+		for(i=0;i<12;i++)
+		{ 
+			//LCDWritedata(charstring[i]);
+			System.Device.Lcd_12864.LCD_Data_write(uichfont_1416[j+address][i]);		
+		} 
+		System.Device.Lcd_12864.ioctl_lcd_xpos_set (row+1,1);
+		System.Device.Lcd_12864.ioctl_lcd_ypos_set (col+j*12,1);
+		for(i=0;i<12;i++)
+		{ 
+			//LCDWritedata(charstring[i+16]);
+			System.Device.Lcd_12864.LCD_Data_write(uichfont_1416[j+address][12+i]);		
+		} 
+	}
+}
+
+
 //
 //01 23 45 67
 //0~128

@@ -1,28 +1,10 @@
----- Floor_Data Matches (40 in 8 files) ----
-App.c (sourcefile\app):Floor_Data   floor_tmp[MAX_FLOOR_NUM];
-App.c (sourcefile\app):	Flash_ReadInfo((UINT8 *)floor_tmp, FLOOR_ADD, sizeof(Floor_Data)*MAX_FLOOR_NUM);
-App.h (sourcefile\app):}Floor_Data;
-App.h (sourcefile\app):extern Floor_Data   floor_tmp[MAX_FLOOR_NUM];
-Encoder.c (sourcefile\app):void	Encode_Save(Floor_Data  *floor_data)
-Encoder.c (sourcefile\app):	Flash_WriteInfo((u8*)floor_data,FLOOR_ADD+(floor_data->floor_num-1)*sizeof(Floor_Data),sizeof(Floor_Data));
-Encoder.c (sourcefile\app):void	Encode_Read(u8 floor_num,Floor_Data  *floor_data)
-Encoder.c (sourcefile\app):	Flash_ReadInfo((u8*)floor_data,FLOOR_ADD+(floor_num-1)*sizeof(Floor_Data),sizeof(Floor_Data));
-Encoder.c (sourcefile\app):			Floor_Data  floor_data;
-Encoder.c (sourcefile\app):			floor_data.floor_flag = 1;//标志位使用了
-Encoder.c (sourcefile\app):			floor_data.floor_num = floor_num_tmp;//楼层设置正确
-Encoder.c (sourcefile\app):			floor_data.floor_count = encoder_set_2;//楼层对应的编码值
-Encoder.c (sourcefile\app):			//HB_Send_Floor(&floor_data);//发送给控制端
-Encoder.c (sourcefile\app):			Encode_Save(&floor_data);
-Encoder.c (sourcefile\app):			//Flash_WriteInfo((u8*)&floor_data,FLOOR_ADD+(floor_num_tmp-1)*sizeof(Floor_Data),sizeof(Floor_Data));
-Encoder.c (sourcefile\app):			//Flash_ReadInfo((u8*)&floor_tmp[floor_num_tmp-1],FLOOR_ADD+(floor_num_tmp-1)*sizeof(Floor_Data),sizeof(Floor_Data));
-Encoder.h (sourcefile\app):void	Encode_Save(Floor_Data  *floor_data);
-Encoder.h (sourcefile\app):void	Encode_Read(u8 floor_num,Floor_Data  *floor_data);
-HB-KZT.build_log.htm (keil\output):..\SourceFile\App\Encoder.c(15): error:  #20: identifier "floor_data" is undefined
-HB-KZT.build_log.htm (keil\output):        Flash_WriteInfo((u8*)floor_data,FLOOR_ADD+(floor_data->floor_num-1)*sizeof(Floor_Data),sizeof(Floor_Data));
-Uart.c (sourcefile\app):void HB_Send_Floor(Floor_Data   *floor)
-Uart.h (sourcefile\app):void HB_Send_Floor(Floor_Data   *floor);
-Uart.h (sourcefile\app):	CMD_FLOOR_DATA,//楼层
-uiPross.c (sourcefile\app):				case CMD_FLOOR_DATA://楼层呼叫显示
----- Floor_Data Search Errors Encountered (1) ----
+---- Floor_CurrentCount_pre Matches (6 in 1 files) ----
+uiPross.c (sourcefile\app):	u32  Floor_CurrentCount_pre;
+uiPross.c (sourcefile\app):		Floor_CurrentCount_pre = Floor_CurrentCount;
+uiPross.c (sourcefile\app):			if(Floor_CurrentCount_pre >Floor_CurrentCount)
+uiPross.c (sourcefile\app):				//Floor_CurrentCount_diff = Floor_CurrentCount_pre-Floor_CurrentCount;
+uiPross.c (sourcefile\app):			}else if(Floor_CurrentCount_pre < Floor_CurrentCount)
+uiPross.c (sourcefile\app):				//Floor_CurrentCount_diff = Floor_CurrentCount-Floor_CurrentCount_pre;
+---- Floor_CurrentCount_pre Search Errors Encountered (1) ----
 The following 1 files could not be processed:
 E:\code\HB-HYT001\Keil\Output\HB-HYT001.build_log.htm : File could not be opened.

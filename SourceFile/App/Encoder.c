@@ -28,12 +28,8 @@ u8	Encoder_Demarcate(void)
 {
 	u8 nKey;
 	Floor_Data  floor_data;
-	u8 floor_num_tmp = 1;
+	u16 floor_num_tmp = 1;
 	u32 encoder_set_2 = 0;
-	
-	u8 pcRet[2];
-	u8 i,nPos = 0;
-	pcRet[0] = 0;
 		
 	uiLcdClear();
 	uiLcd_1212_ch(UISTR_ENCODER_FLOOR,0,4,4);//显示楼层标定
@@ -52,10 +48,12 @@ u8	Encoder_Demarcate(void)
 	
 	while(1)
 	{
-		//调试接口
-		uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_count ,0,9,0,7);//显示对应楼层保存的计数器值
-		//LcdDecimal(floor_tmp[floor_num_tmp-1].floor_diff,2,9,0,7);//显示对应楼层保存的计数器值
-
+		if(floor_num_tmp < MAX_FLOOR_NUM && floor_num_tmp>0)
+		{
+			//调试接口
+			uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_count ,0,9,0,7);//显示对应楼层保存的计数器值
+			//LcdDecimal(floor_tmp[floor_num_tmp-1].floor_diff,2,9,0,7);//显示对应楼层保存的计数器值
+		}
 
 		//显示当前编码值
 		encoder_set_2 = Floor_CurrentCount;
@@ -70,90 +68,86 @@ u8	Encoder_Demarcate(void)
 		
 		if(nKey == UIKEY_OK)//当按下OK键时，将对应楼层保存并发送给控制端更新
 		{
-
-			floor_data.floor_flag = 1;//标志位使用了
-			floor_data.floor_num = floor_num_tmp;//楼层设置正确
-			floor_data.floor_count = encoder_set_2;//楼层对应的编码值
-			if(floor_num_tmp ==1)
+			if(floor_num_tmp < 1)
+			{	
+				continue;	
+			}
+			else if(floor_num_tmp > App.Max_floor)
 			{
-				floor_data.floor_diff = 0;
+				//界面提示错误值"标定楼层过大"
+
+				uiLcd_1212_ch(UISTR_ENCODER_FLOOR,4,42,4);
+				//uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,4,66+12*2,1);
+				uiLcd_1212_ch(UISTR_UI_GUODA,4,42+12*4,2);
+				DelayMs(1500);
+				uiLcdLineErase8x16(2,2,17,0);//将先前状态擦除
+				floor_num_tmp = 0;
+				
 			}
 			else
 			{
-				
-				floor_data.floor_diff = encoder_set_2-floor_tmp[floor_num_tmp-2].floor_count;
-				//如果当前值小于前一楼层或大于后一楼层，标定无效
-				if(floor_data.floor_count <floor_tmp[floor_num_tmp-2].floor_count)
+				floor_data.floor_flag = 1;//标志位使用了
+				floor_data.floor_num = floor_num_tmp;//楼层设置正确
+				floor_data.floor_count = encoder_set_2;//楼层对应的编码值
+				if(floor_num_tmp ==1)
 				{
-					continue;
+					floor_data.floor_diff = 0;
+				}
+				else
+				{
+					
+					floor_data.floor_diff = encoder_set_2-floor_tmp[floor_num_tmp-2].floor_count;
+					//如果当前值小于前一楼层或大于后一楼层，标定无效
+					if(floor_data.floor_count <floor_tmp[floor_num_tmp-2].floor_count)
+					{
+						continue;
+					}
+
 				}
 
-			}
-
-			
-	
-			Encode_Save(&floor_data);
-			
-			Encode_Read(floor_num_tmp,&floor_tmp[floor_num_tmp-1]);
-	
-			//提示保存正确
-			uiLcd_1414_ch(UISTR_XXX_SAVE, 4,14*2+4,2);
-			uiLcd_1414_ch(UISTR_XXX_SUCESS, 4,14*4+4,2);
-			DelayMs(1000);
-			uiLcdLineErase8x16(2,0,15,0);
-			
-		}
-
-		if(nKey == UIKEY_MENU)//删除
-		{
-			
-		}
+				Encode_Save(&floor_data);
+				Encode_Read(floor_num_tmp,&floor_tmp[floor_num_tmp-1]);
 		
+				//提示保存正确
+				uiLcd_1414_ch(UISTR_XXX_SAVE, 4,14*2+4,2);
+				uiLcd_1414_ch(UISTR_XXX_SUCESS, 4,14*4+4,2);
+				DelayMs(1000);
+				uiLcdLineErase8x16(2,0,15,0);
+			}
+			
+		}
 		if (uiKeyIsDigit(nKey))
 		{
-			pcRet[nPos] = nKey;
-			
-			if(nPos == 0)
+			floor_num_tmp = floor_num_tmp * 10 + (int)nKey - '0';
+			if(floor_num_tmp > App.Max_floor)
 			{
-				floor_num_tmp = (pcRet[0]-'0');
-			}else if(nPos == 1)
-			{
-				floor_num_tmp = (pcRet[0]-'0')*10+(pcRet[1]-'0');
+				floor_num_tmp =  ((floor_num_tmp%100)/10)*10 +(nKey - '0');
 			}
-			//printf("nPos== %d\r\n",nPos);
-			//printf("floor_num_tmp== %d\r\n",floor_num_tmp);
-			nPos++;
-
-			if (nPos == 2)//当读取位置大于2时,
-			{	
-				nPos = 0;
-				for (i=0; i<2; i++)
-				{	
-					pcRet[i] = '0';
-				}
-				//continue;
+			if(floor_num_tmp < 1)
+			{
+				floor_num_tmp = 0;
 			}
 		}
-		
 		if(nKey == UIKEY_DOWN)//下翻数字
 		{
-			floor_num_tmp--;
+			if(floor_num_tmp == 0)
+			{
+				
+			}else
+			{
+				floor_num_tmp--;
+			}
 		}
 		if(nKey == UIKEY_UP)//上翻数字
 		{
 			floor_num_tmp++;
+			if(floor_num_tmp > App.Max_floor)
+			{
+				floor_num_tmp =  App.Max_floor;
+			}
 		}
-
-		if(floor_num_tmp < 1)
-		{
-			floor_num_tmp =1;
-		}
-	 	if(floor_num_tmp > App.Max_floor)
-		{
-			floor_num_tmp = App.Max_floor;
-		}
-		
 		uiLcdDecimal(floor_num_tmp,1,3,0,2);//显示楼层数
+		
 	}
 	return FALSE;
 

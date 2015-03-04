@@ -13,6 +13,8 @@ extern const unsigned char uichfont_1212[][24];
 extern const unsigned char uichfont_1616[][32];
 extern const unsigned char uichfont_1414[][28];
 
+extern const unsigned char uichfont_1416[][24];
+
 //6*8
 //pbyFontData[6], 0<=row<=7, 0<=col<=19
 void uiLcd6x8Char(UINT8 *pbyFontData, int row, int col, BOOL bIsReverse);
@@ -51,6 +53,9 @@ void uiLcd_1616_ch(u8 address,u8 row,u8 col,u8 num);
 void uiLcdClear(void);
 
 void uiLcd_1414_ch(u8 address,u8 row,u8 col,u8 num);
+
+
+void uiLcd_1416_ch(u8 address,u8 row,u8 col,u8 num);
 
 #endif /*__UILCD_12864_H*/
 

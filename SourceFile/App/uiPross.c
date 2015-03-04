@@ -248,18 +248,25 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 		uiLcdMediumString("11",0+2,12,1);//显示“目标楼层”数字
 		
 		//uiLcd_1212_ch(UISTR_WEIGHT,4,4,3);//显示“吊重：”
-		//uiLcd_1616_ch(0,2+2,0,3);//显示“吊重：”
-		uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, 4+2, 4, 2);
+		uiLcd_1616_ch(0,2+4,0,2);//显示“重量”
+		//uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, 4+2, 4, 2);
 		uiLcdMediumString(":",1+2,4,0);//冒号
 		
 		uiLcdMediumString("0.00",1+2,5,0);//这个数值填吊重实时数据
-		uiLcdMediumString("T",1+2,9,0);
+		//uiLcdMediumString("T",1+2,9,0);
+		//显示  吨
+		uiLcd_1616_ch(11,6,74,1);
 		
 		//uiLcdMediumString("100",2,11,0);//这个数值填吊重百分比
 		//uiLcdMediumString("%",2,14,0);
 		
 		//用于显示呼叫楼层
-		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 0, 4, 4);
+		//uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 0, 4, 4);
+
+		uiLcd_1616_ch(8,0,2,3);//显示  呼叫楼层
+		uiLcdMediumString(":",0,6,0);//冒号
+
+		//uiLcd_1416_ch(0,0,2,4);
 		return ;
 	}
 
@@ -269,7 +276,10 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 	{
 		if(uiTimeGetTickCount() - HB_Floor_Call_Buff[ywm].Call_Time_Count < 3000)//3//3s内显示
 		{
-			uiLcdDecimal(HB_Floor_Call_Buff[ywm].Call_num,0,8+(ywm*3),0,2);
+			if(HB_Floor_Call_Buff[ywm].Call_num != 0)
+			{
+				uiLcdDecimal(HB_Floor_Call_Buff[ywm].Call_num,0,8+(ywm*3),0,2);
+			}
 		}
 		else
 		{
@@ -281,7 +291,7 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 	
 	//显示目标楼层
 	//uiLcdDecimal(Target_F,0+2,12,0,2);
-	if(Cursor_Flag == 1)
+	if((Cursor_Flag == 1)&&(Target_F!=0))
 	{
 		uiLcdDecimal(Target_F,0+2,12,0,2);
 	}
@@ -320,7 +330,7 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 			//显示百分比
 			//uiLcdDecimal(Parameter->Weight_Percentage,2,11,0,3);
 		}
-		
+	/*	
 		if((Parameter->Parameter_Change_Position)&(SHOWFLAG))
 		{
 			//用于显示设备状态	
@@ -338,8 +348,8 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 					break;
 			}
 			
-		}
-
+		}*/
+/*
 		if((Parameter->Parameter_Change_Position)&(SHOWFLOOR))
 		{
 			switch(Parameter->Show_Floor)
@@ -363,7 +373,7 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 				default:
 					break;
 			}
-		}
+		}*/
 
 	}
 	
@@ -444,16 +454,16 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	//在这里进行报警和预警判断
 	if(ad_temp >(App.Weight.Rated_weight*App.Weight.Warning_weight/100))//超过预警值
 	{
-		uiLcdLineErase8x16(3,10,17,0);//将先前状态擦除
+		uiLcdLineErase8x16(3,12,17,0);//将先前状态擦除
 		//提示预警
-		uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 6,84, 1);
-		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 6,96, 3);
+		//uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 6,84, 1);
+		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 6,96, 2);
 		
 		if(ad_temp >(App.Weight.Rated_weight*App.Weight.Alarm_weight/100))//超过报警值
 		{
 			//提示报警
-			uiLcdLineErase8x16(3,10,17,0);
-			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI, 6, 84, 3);
+			uiLcdLineErase8x16(3,12,17,0);
+			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 6, 96, 2);
 			//uiLcdLineErase8x16(3,15,16,0);
 			fuck_count++;
 			if(fuck_count >=3)
@@ -469,7 +479,7 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	}
 	else
 	{
-		uiLcdLineErase8x16(3,10,17,0);//将先前状态擦除
+		uiLcdLineErase8x16(3,12,17,0);//将先前状态擦除
 		fuck_count=0;
 		System.Device.IO.HB_Gpio_Set_Value(RELAY_4,1);//超载闭合
 	}
@@ -720,7 +730,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_OTHER_BUCHANG://其他补偿
-			nValue = uiProcBoxNumber(&bRet, row, 12, 0, App.Other_buchang, 9999, 4, 4, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 12, App.Other_buchang,0, 9999, 4, 4, TRUE);
 			if (bRet) 
 			{
 				
@@ -1612,7 +1622,7 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		}
 		if(Target_F < 1)
 		{
-			Target_F =  1;
+			Target_F =  0;
 		}
 			
 	}
@@ -1631,10 +1641,12 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 	}
 	else if (nKey == UIKEY_DOWN)//目标楼层减1
 	{
-		Target_F = Target_F-1;
-		if(Target_F < 1)
+		if(Target_F == 0)
 		{
-			Target_F =  1;
+			
+		}else
+		{
+			Target_F = Target_F-1;
 		}
 		//System.Device.IO.HB_Gpio_Set_Value(RELAY_1,0);
 		//System.Device.IO.HB_Gpio_Set_Value(RELAY_2,0);
@@ -1642,7 +1654,7 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 	}
 	else if (nKey == UIKEY_ESC)//目标楼层退出
 	{
-		Target_F = 1;
+		Target_F = 0;
 		//if(Target_F < 1)
 		//{
 			//Target_F =  1;
@@ -1655,7 +1667,11 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		//处理目标楼层启动流程
 		//get_weight_clear_value();
 		
-		if(Target_F > App.Max_floor)
+		if(Target_F < 1)
+		{	
+			//continue;	
+		}
+		else if(Target_F > App.Max_floor)
 		{
 			//界面提示错误值"目标层过大"
 	
@@ -1714,11 +1730,17 @@ void uiProcProtocl(void)
 	u8  xxxx;
 	u32 wahh;
 	wahh = System.Device.Call_Floor.Remote_Scan();
+	
+
+	//if(wahh != 0)
+	//{
+		//printf("wahh=========%x\r\n",wahh);
+	//}
 	//过滤多余信息方式
-	if((wahh != 0)&&(wahh < 0x01000000) &&((wahh&0xf)==0xf)&&((wahh&0xffffff)!= 0xffffff))
+	if((wahh != 0))//&&(wahh < 0x01000000) &&((wahh&0xf)==0xf)&&((wahh&0xffffff)!= 0xffffff))
 	{
 		//uiLcdDecimal(wahh,3,0,0,7);
-		//printf("wahh==%x\r\n",wahh);
+		//printf("wahh=====%x\r\n",wahh);
 		for(xxxx=0;xxxx<MAX_FLOOR_NUM;xxxx++)
 		{
 			if(wahh == HB_Floor_Call[xxxx].Call_Time_Count)
@@ -1777,7 +1799,7 @@ void uiProcMain(void)
 	//static u32	xxxx=0;
 
 	Menu_Parameter Parameter;
-	Target_F = 1;//初始话楼层
+	Target_F = 0;//初始话楼层
 	
 	//重置密码使用
 	nKey  = uiKeyGetKey();
@@ -1802,6 +1824,11 @@ void uiProcMain(void)
 	
 	uiProcMainDraw(TRUE,&Parameter);
 	uiProcMenuBuild();//建立菜单目录
+
+	//消除第一次开机时就显示呼叫楼层问题
+	HB_Floor_Call_Buff[0].Call_Time_Count = 3000;
+	HB_Floor_Call_Buff[1].Call_Time_Count = 3000;
+	HB_Floor_Call_Buff[2].Call_Time_Count = 3000;
 	
 	Time_tmp =uiTimeGetTickCount();
 	Time_tmp1 =uiTimeGetTickCount();
@@ -1811,7 +1838,7 @@ void uiProcMain(void)
 	{
 
 
-		Floor_CurrentCount_pre = Floor_CurrentCount;
+		//Floor_CurrentCount_pre = Floor_CurrentCount;
 		
 		nKey  = uiKeyGetKey();//处理按键和楼层
 		if(nKey != UIKEY_NONE)
@@ -1819,10 +1846,8 @@ void uiProcMain(void)
 			uiProcKey(nKey,&Parameter);
 		
 		}
+		uiProcProtocl();//楼层呼叫接受处理
 		
-		 uiProcProtocl();//楼层呼叫接受处理
-		
-			 
 		 if(uiTimeGetTickCount() -Time_tmp >150)//1500ms更新一次重量值
                	 {
                        	 //以后每隔2s钟上传一次
@@ -1830,10 +1855,7 @@ void uiProcMain(void)
 			{
 				Handle_Weight(&Parameter);//重量值采集和处理
 			}
-                    	
                         	Time_tmp =uiTimeGetTickCount();
-
-			
 			//获取电压的AD值
 			ad_temp = ADC_Filter_V();
 			//连续1.5s*20=30s左右没有检测到电压时，就保存当前楼层数值
@@ -1848,7 +1870,6 @@ void uiProcMain(void)
 						fuck_flag =1;
 						//uiLcdDecimal(Floor_CurrentCount,0,7,0,5);
 					}
-					
 				}
 			}
 			else
@@ -1856,11 +1877,7 @@ void uiProcMain(void)
 				fuck_count =0;
 				fuck_flag =0;
 			}
-
-			//Handle_Voltage(); 	
-
                   }
-
 		if(HB_RELAY_Close_Flag == 1)//存在手柄断开了
 		{
 			
@@ -1869,6 +1886,7 @@ void uiProcMain(void)
 				WTV_Voice(DINGDONG);
 				call_flag=1;
 			}
+			
 			
 
 			if(uiTimeGetTickCount() -Time_tmp1 > 700)//7s后闭合
@@ -1890,8 +1908,9 @@ void uiProcMain(void)
 			
 		//Handle_Master(&Parameter);
 
-		 if(uiTimeGetTickCount() -Time_tmp2 >50)//500ms更新一次图标
+		 if(uiTimeGetTickCount() -Time_tmp2 >30)//500ms获取一次标定编码值
                	 {
+			
 			if(Floor_CurrentCount_pre >Floor_CurrentCount)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount_pre-Floor_CurrentCount;
@@ -1906,18 +1925,25 @@ void uiProcMain(void)
 			}
 			
 			Time_tmp2 = uiTimeGetTickCount();
-			
-			
 		}
-		if(uiTimeGetTickCount() -Time_tmp3 >100)//800ms更新一次目标层闪烁
+
+		 
+		if(uiTimeGetTickCount() -Time_tmp3 >80)//800ms更新一次目标层闪烁
                	 {
 			Cursor_Flag= !Cursor_Flag;
 			Time_tmp3 = uiTimeGetTickCount();
+
+			Floor_CurrentCount_pre = Floor_CurrentCount;
+			
 		}
 
 		//uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
 		
 
+		
+		 
+			
+		
 
 		uiProcMainDraw(FALSE,&Parameter);//更新显示
 		Parameter.Parameter_Change_Flag =0;

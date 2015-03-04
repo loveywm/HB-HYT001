@@ -22,14 +22,10 @@ void	Call_Read(u8 call_num,Call_Data  *call_data)
 u8 Call_Del(void)
 {
 	u8 nKey;
-	u8 floor_num_tmp = 1;
+	u16 floor_num_tmp = 1;
 	u32 Call_num_set_tmp= 0;
 	//u32 Call_num_set= 0;
 
-	u8 pcRet[2];
-	u8 i,nPos = 0;
-	pcRet[0] = 0;
-	
 	uiLcdClear();
 	uiLcd_1212_ch(UISTR_INPUT_PASSWORD,0,4,3);//请输入
 	uiLcd_1212_ch(UISTR_ENCODER_FLOOR+2,0,4+36,2);//楼层
@@ -48,22 +44,15 @@ u8 Call_Del(void)
 	uiLcdMediumString("ESC", 3, 13,0);
 
 	
-	uiLcdDecimal(1,1,3,0,3);//显示楼层数
+	uiLcdDecimal(1,1,3,0,2);//显示楼层数
 	
 	while(1)
 	{
-		//Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
-		//if(Call_num_set_tmp != 0)
-		//{
-			//uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
-			//Call_num_set=Call_num_set_tmp;
-		//}
-
-		Call_num_set_tmp = HB_Floor_Call[floor_num_tmp-1].Call_Time_Count;
-		uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
-
-		
-		//uiLcdDecimal(floor_num_tmp,1,3,0,3);//显示楼层数
+		if(floor_num_tmp < MAX_FLOOR_NUM && floor_num_tmp>0)
+		{
+			Call_num_set_tmp = HB_Floor_Call[floor_num_tmp-1].Call_Time_Count;
+			uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
+		}
 		
         		nKey = uiKeyGetKey();
 		if(nKey == UIKEY_ESC)
@@ -75,6 +64,12 @@ u8 Call_Del(void)
 		{
 
 			Call_Data  call_data;
+
+			if((floor_num_tmp == 0) || (floor_num_tmp > MAX_FLOOR_NUM))
+			{
+				continue;
+			}
+			
 			call_data.Call_flag =0;//标志位使用了
 			call_data.Call_num = floor_num_tmp;//楼层设置正确
 			call_data.Call_Time_Count = 0;//楼层对应无线编码的编码值
@@ -97,52 +92,35 @@ u8 Call_Del(void)
 			continue;
 		if (uiKeyIsDigit(nKey))
 		{
-			pcRet[nPos] = nKey;
-			
-			if(nPos == 0)
+			floor_num_tmp = floor_num_tmp * 10 + (int)nKey - '0';
+			if(floor_num_tmp > App.Max_floor)
 			{
-				floor_num_tmp = (pcRet[0]-'0');
-			}else if(nPos == 1)
+				floor_num_tmp =  ((floor_num_tmp%100)/10)*10 +(nKey - '0');
+			}
+			if(floor_num_tmp < 1)
 			{
-				floor_num_tmp = (pcRet[0]-'0')*10+(pcRet[1]-'0');
+				floor_num_tmp = 0;
 			}
-			//printf("nPos== %d\r\n",nPos);
-			//printf("floor_num_tmp== %d\r\n",floor_num_tmp);
-			nPos++;
-
-			if (nPos == 2)//当读取位置大于2时,
-			{	
-				nPos = 0;
-				for (i=0; i<2; i++)
-				{	
-					pcRet[i] = '0';
-				}
-				//continue;
-			}
-		}
-		if(nKey == UIKEY_MENU)//删除
-		{
-			
 		}
 		if(nKey == UIKEY_DOWN)//下翻数字
 		{
-			floor_num_tmp--;
+			if(floor_num_tmp == 0)
+			{
+				
+			}else
+			{
+				floor_num_tmp--;
+			}
 		}
 		if(nKey == UIKEY_UP)//上翻数字
 		{
 			floor_num_tmp++;
+			if(floor_num_tmp > App.Max_floor)
+			{
+				floor_num_tmp =  App.Max_floor;
+			}
 		}
-
-		if(floor_num_tmp < 1)
-		{
-			floor_num_tmp =1;
-		}
-	 	if(floor_num_tmp > App.Max_floor)
-		{
-			floor_num_tmp = App.Max_floor;
-		}
-	
-		uiLcdDecimal(floor_num_tmp,1,3,0,3);//显示楼层数
+		uiLcdDecimal(floor_num_tmp,1,3,0,2);//显示楼层数
 	}
 	return FALSE;
 
@@ -181,10 +159,6 @@ u8 Call_Learn(void)
 	u32 Call_num_set3= 0;
 	u32 Call_Time;
 
-	u8 pcRet[2];
-	u8 i,nPos = 0;
-	pcRet[0] = 0;
-	
 	uiLcdClear();
 	uiLcd_1212_ch(UISTR_CALL_SET,0,4,2);//学习
 	uiLcd_1212_ch(UISTR_ENCODER_FLOOR+2,0,4+24,2);//楼层
@@ -205,10 +179,10 @@ u8 Call_Learn(void)
 	Call_Time =uiTimeGetTickCount();
 	while(1)
 	{
-		if(floor_num_tmp != 0)
+		if((floor_num_tmp >0) && (floor_num_tmp < MAX_FLOOR_NUM))
 		{
 			Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
-			if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+			if((Call_num_set_tmp != 0))//&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
 			{
 				uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
 				Call_num_set=Call_num_set_tmp;
@@ -216,7 +190,7 @@ u8 Call_Learn(void)
 				DelayMs(800);
 					
 				Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
-				if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+				if((Call_num_set_tmp != 0))//&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
 				{
 					uiLcdDecimal(Call_num_set_tmp,2, 2+6,0,8);
 					Call_num_set2=Call_num_set_tmp;
@@ -229,7 +203,7 @@ u8 Call_Learn(void)
 					DelayMs(800);
 					
 					Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
-					if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
+					if((Call_num_set_tmp != 0))//&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
 					{
 						//uiLcdDecimal(Call_num_set_tmp,2, 2+6,0,8);
 						Call_num_set=Call_num_set_tmp;
@@ -245,14 +219,7 @@ u8 Call_Learn(void)
 
 			}
 		}
-	/*	Call_num_set_tmp = System.Device.Call_Floor.Remote_Scan();
-		if((Call_num_set_tmp != 0)&&(Call_num_set_tmp < 0x01000000) &&((Call_num_set_tmp&0xf)==0xf)&&((Call_num_set_tmp&0xffffff)!= 0xffffff))
-		{
-			uiLcdDecimal(Call_num_set_tmp,1, 2+6,0,8);
-			Call_num_set=Call_num_set_tmp;
 
-		}
-*/
         		nKey = uiKeyGetKey();
 		if (nKey == UIKEY_NONE)
 			continue;
@@ -264,7 +231,7 @@ u8 Call_Learn(void)
 		if(nKey == UIKEY_OK)//当按下OK键时，将对应楼层保存并发送给控制端更新
 		{
 			Call_Data  call_data;
-			if(floor_num_tmp == 0)
+			if((floor_num_tmp == 0) || (floor_num_tmp > MAX_FLOOR_NUM))
 			{
 				continue;
 			}
@@ -302,52 +269,35 @@ u8 Call_Learn(void)
 	
 		if (uiKeyIsDigit(nKey))
 		{
-			pcRet[nPos] = nKey;
-			
-			if(nPos == 0)
+			floor_num_tmp = floor_num_tmp * 10 + (int)nKey - '0';
+			if(floor_num_tmp > App.Max_floor)
 			{
-				floor_num_tmp = (pcRet[0]-'0');
-			}else if(nPos == 1)
+				floor_num_tmp =  ((floor_num_tmp%100)/10)*10 +(nKey - '0');
+			}
+			if(floor_num_tmp < 1)
 			{
-				floor_num_tmp = (pcRet[0]-'0')*10+(pcRet[1]-'0');
+				floor_num_tmp = 0;
 			}
-			//printf("nPos== %d\r\n",nPos);
-			//printf("floor_num_tmp== %d\r\n",floor_num_tmp);
-			nPos++;
-
-			if (nPos == 2)//当读取位置大于2时,
-			{	
-				nPos = 0;
-				for (i=0; i<2; i++)
-				{	
-					pcRet[i] = '0';
-				}
-				//continue;
-			}
-		}
-		if(nKey == UIKEY_MENU)//删除
-		{
-			
 		}
 		if(nKey == UIKEY_DOWN)//下翻数字
 		{
-			floor_num_tmp--;
+			if(floor_num_tmp == 0)
+			{
+				
+			}else
+			{
+				floor_num_tmp--;
+			}
 		}
 		if(nKey == UIKEY_UP)//上翻数字
 		{
 			floor_num_tmp++;
-		}
-
-		if(floor_num_tmp < 1)
-		{
-			floor_num_tmp =0;
-		}
-	 	if(floor_num_tmp > App.Max_floor)
-		{
-			floor_num_tmp = App.Max_floor;
+			if(floor_num_tmp > App.Max_floor)
+			{
+				floor_num_tmp =  App.Max_floor;
+			}
 		}
 		uiLcdDecimal(floor_num_tmp,1,3,0,2);//显示楼层数
-	
 	}
 	return FALSE;
 

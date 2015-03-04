@@ -83,23 +83,26 @@ void HB_Run_Check_Stop(void)//检测是否需要停止
 	{
 		   if(HB_RELAY_Flag == 2)//判断是向下运行
 	            {
-			if(Floor_CurrentCount <= (Floor_TargetCount+App.Other_buchang))//在定值前切断高速，转为低速
-			{
-				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开	
-			}
+				if(Floor_CurrentCount <= (Floor_TargetCount+App.Other_buchang))//在定值前切断高速，转为低速
+				{
+					System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开	
+				}
 				
-	                    if(Floor_CurrentCount <= (Floor_TargetCount+App.Down_buchang))//判断向下停止条件
-	                    {
-	                        HB_RELAY_Flag = 0;
-	                        HB_Start_Flag = 0;
-				//System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开			
-				System.Device.IO.HB_Gpio_Set_Value(RELAY_2,0);//下降断开
-				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
+	                    	if(Floor_CurrentCount <= (Floor_TargetCount+App.Down_buchang))//判断向下停止条件
+	                    	{
+	                        		HB_RELAY_Flag = 0;
+	                        		HB_Start_Flag = 0;
+					//System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开			
+					System.Device.IO.HB_Gpio_Set_Value(RELAY_2,0);//下降断开
+					System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
 				
-				//断开7s后再闭合
-				HB_RELAY_Close_Flag =1;
+					//断开7s后再闭合
+					HB_RELAY_Close_Flag =1;
+					
+					//到站后目标楼层清零
+					Target_F = 0;
 	                   
-	                    }
+	                    	}
 	            }
 	            else if(HB_RELAY_Flag == 1)//判断是向上运行
 	            {
@@ -111,8 +114,8 @@ void HB_Run_Check_Stop(void)//检测是否需要停止
 			
 	                    if(Floor_CurrentCount >= (Floor_TargetCount-App.Up_buchang))//判断向上停止条件
 	                    {
-	                        HB_RELAY_Flag = 0;
-	                        HB_Start_Flag = 0;
+	                        	HB_RELAY_Flag = 0;
+	                        	HB_Start_Flag = 0;
 				//System.Device.IO.HB_Gpio_Set_Value(RELAY_3,0);//高速断开
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_1,0);//上升断开
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
@@ -120,6 +123,9 @@ void HB_Run_Check_Stop(void)//检测是否需要停止
 
 				//断开7s后再闭合
 				HB_RELAY_Close_Flag =1;
+				
+				//到站后目标楼层清零
+				Target_F = 0;
 	    
 	                    }
 	            }
@@ -344,9 +350,7 @@ static void InitializeApp(void)
 
 	InitializeData();
     
-    	//InitializeMenu();
-    	//TIM1->CNT = 10000;
-    	//Floor_CurrentCount = 5000-1;
+
 
 
 		
@@ -358,14 +362,11 @@ static void InitializeApp(void)
         System.Device.Systick.Register(Systick10000, SystickRoutine1);
 
 	
-    	//System.Device.Adc.Register(AdcChannel0, (ushort *)(&Temperature_tmp));
 
    	 System.Device.Adc.Register(AdcChannel0, (ushort *)(&Weight_Tmp));
 	System.Device.Adc.Register2(AdcChannel1, (ushort *)(&Voltage_Tmp));
 
-    	//System.Device.Usart1.RxdRegister(Usart1RxdFunction);
 
-	 //System.Device.Usart2.RxdRegister(Usart2RxdFunction);
 		
 	 System.Device.Usart3.RxdRegister(Usart2RxdFunction);
 }

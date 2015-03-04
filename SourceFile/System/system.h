@@ -340,6 +340,7 @@ typedef struct
 
 	struct Call_Floor{
 		u32 (*Remote_Scan)(void);
+		//u32 (*Remote_Scan1)(void);
 	}Call_Floor;
 
 /*
