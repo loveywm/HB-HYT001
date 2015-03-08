@@ -1,5 +1,5 @@
 Dependencies for Project 'msOS-Stm32', Target 'Target 1': (DO NOT MODIFY !)
-F (..\SourceFile\App\app.c)(0x54F56F3F)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\app.o --omf_browse .\output\app.crf --depend .\output\app.d)
+F (..\SourceFile\App\app.c)(0x54FBC0AD)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\app.o --omf_browse .\output\app.crf --depend .\output\app.d)
 I (..\SourceFile\System\system.h)(0x54D5F805)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x5284661A)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x52846614)
@@ -8,7 +8,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -20,11 +20,11 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\App\uiLCD_12864.c)(0x54F65F06)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\uilcd_12864.o --omf_browse .\output\uilcd_12864.crf --depend .\output\uilcd_12864.d)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -36,7 +36,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 I (..\SourceFile\System\system.h)(0x54D5F805)
@@ -58,7 +58,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -70,7 +70,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\App\Voice.c)(0x54C5D2B9)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\voice.o --omf_browse .\output\voice.crf --depend .\output\voice.d)
@@ -82,7 +82,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -94,10 +94,10 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
-F (..\SourceFile\App\uiPross.c)(0x54F69652)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\uipross.o --omf_browse .\output\uipross.crf --depend .\output\uipross.d)
+F (..\SourceFile\App\uiPross.c)(0x54FBE31A)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\uipross.o --omf_browse .\output\uipross.crf --depend .\output\uipross.d)
 I (..\SourceFile\System\system.h)(0x54D5F805)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x5284661A)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x52846614)
@@ -106,7 +106,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -118,7 +118,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\App\password.c)(0x54D05811)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\password.o --omf_browse .\output\password.crf --depend .\output\password.d)
@@ -130,7 +130,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -142,7 +142,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\App\SFlashApi.c)(0x5424AE7C)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\sflashapi.o --omf_browse .\output\sflashapi.crf --depend .\output\sflashapi.d)
@@ -154,7 +154,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -166,7 +166,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\App\Uart.c)(0x54B8A421)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\uart.o --omf_browse .\output\uart.crf --depend .\output\uart.d)
@@ -178,7 +178,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -190,10 +190,10 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
-F (..\SourceFile\App\load.c)(0x54F6687D)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\load.o --omf_browse .\output\load.crf --depend .\output\load.d)
+F (..\SourceFile\App\load.c)(0x54FBD2D3)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\load.o --omf_browse .\output\load.crf --depend .\output\load.d)
 I (..\SourceFile\System\system.h)(0x54D5F805)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x5284661A)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x52846614)
@@ -202,7 +202,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -214,10 +214,10 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
-F (..\SourceFile\App\Encoder.c)(0x54D43300)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\encoder.o --omf_browse .\output\encoder.crf --depend .\output\encoder.d)
+F (..\SourceFile\App\Encoder.c)(0x54FA625D)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\encoder.o --omf_browse .\output\encoder.crf --depend .\output\encoder.d)
 I (..\SourceFile\System\system.h)(0x54D5F805)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x5284661A)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x52846614)
@@ -226,7 +226,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -238,7 +238,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\App\Call.c)(0x54D5F68C)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\call.o --omf_browse .\output\call.crf --depend .\output\call.d)
@@ -250,7 +250,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-I (..\SourceFile\App\app.h)(0x54D08C12)
+I (..\SourceFile\App\app.h)(0x54FBC22C)
 I (..\SourceFile\App\logic.h)(0x5423871E)
 I (..\SourceFile\App\menu.h)(0x53A51F2D)
 I (..\SourceFile\App\Voice.h)(0x54893995)
@@ -262,7 +262,7 @@ I (..\SourceFile\App\password.h)(0x5423DBC9)
 I (..\SourceFile\App\SFlashApi.h)(0x5424A9BA)
 I (..\SourceFile\App\Uart.h)(0x54B5E252)
 I (..\SourceFile\App\uiLCD_tft.h)(0x54422ADA)
-I (..\SourceFile\App\load.h)(0x54D05B69)
+I (..\SourceFile\App\load.h)(0x54FBD2D3)
 I (..\SourceFile\App\Encoder.h)(0x54D0A135)
 I (..\SourceFile\App\Call.h)(0x54B9F588)
 F (..\SourceFile\System\system.h)(0x54D5F805)()
@@ -486,7 +486,7 @@ I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x5284661C)
 I (..\SourceFile\System\Device\device.h)(0x54BC6A94)
 I (..\SourceFile\System\OS\os.h)(0x5430AE2B)
 I (..\SourceFile\System\GUI\gui.h)(0x54111264)
-F (..\SourceFile\System\Device\device_tim.c)(0x54F68F2E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\device_tim.o --omf_browse .\output\device_tim.crf --depend .\output\device_tim.d)
+F (..\SourceFile\System\Device\device_tim.c)(0x54FA658A)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\SourceFile\App -I..\SourceFile\System -I..\SourceFile\System\Device -I..\SourceFile\System\Device\Drive -I..\SourceFile\System\Device\Drive\CMSIS -I..\SourceFile\System\Device\Drive\LIB\inc -I..\SourceFile\System\OS -I..\SourceFile\System\OS\msOS -I..\SourceFile\System\GUI -IC:\Keil\ARM\ARMCC\include-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include-I C:\Keil\ARM\PACK\Keil\STM32F1xx_DFP\1.0.2\Device\Include-DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -o .\output\device_tim.o --omf_browse .\output\device_tim.crf --depend .\output\device_tim.d)
 I (..\SourceFile\System\system.h)(0x54D5F805)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x5284661A)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x52846614)

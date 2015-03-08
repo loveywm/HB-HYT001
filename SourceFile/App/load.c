@@ -14,7 +14,8 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 	int i, nPos = 0;
 	u8 nMaxLen = MAX_LOAD_BYTE_LENS;
 	u16 weignt_value_tmp;
-	u16 weignt_value_tmp_back;
+	//u16 weignt_value_tmp_back;
+	u32 Time_tmp;
 	pcRet[0] = 0;
 	
 	uiLcdClear();
@@ -41,12 +42,17 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 
 	uiLcd_1414_ch(UISTR_XXX_DEL, 6,76,2);
 	uiLcdMediumString("ESC", 3, 13,0);
+
+	Time_tmp = uiTimeGetTickCount();
 	while(1)
 	{
-		
-		//得到重量的AD值
-		weignt_value_tmp	= ADC_Filter();
-
+		 if(uiTimeGetTickCount() -Time_tmp >1000)//1000ms更新一次
+               	 {
+			//得到重量的AD值
+			weignt_value_tmp	= ADC_Filter_T();
+			Time_tmp = uiTimeGetTickCount();
+		 }
+/*
 		//减少刷新频率
 		if(weignt_value_tmp>weignt_value_tmp_back)
 		{
@@ -67,7 +73,7 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 		}
 		
 		weignt_value_tmp_back = weignt_value_tmp;
-		
+*/	
         		nKey = uiKeyGetKey();
 		if(nKey == UIKEY_ESC)
 			break;
@@ -235,7 +241,7 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 	return FALSE;	
 }
 
-
+/*
 //设置标定点
 u8 Load_Set_Calibration(u8 calibration)
 {
@@ -273,7 +279,7 @@ u8 Load_Set_Calibration(u8 calibration)
 	{
 		
 		//得到重量的AD值
-		weignt_value_tmp	= ADC_Filter();
+		weignt_value_tmp	= ADC_Filter_T();
 		uiLcdDecimal(weignt_value_tmp,LOAD_ROW, LOAD_COL+7,0,4);
 		
         		nKey = uiKeyGetKey();
@@ -474,7 +480,7 @@ u8 Load_Set_Calibration(u8 calibration)
 	
 	return FALSE;	
 }
-
+*/
 //由两个校准值计算刻度和零点
 void get_weight_clear_value(void)
 {
@@ -594,7 +600,7 @@ void weight_flag(void)
 	while(1)
 	{
 		//得到重量的AD值
-		weignt_value_tmp	= ADC_Filter();
+		weignt_value_tmp	= ADC_Filter_T();
 		uiLcdDecimal(weignt_value_tmp,LOAD_ROW+2, LOAD_COL+7,0,4);
 
 		uiLcdDecimal(App.Weight.calibrate_one_suffer,LOAD_ROW-1, LOAD_COL-2,0,4);
@@ -648,7 +654,7 @@ void weight_flag(void)
 
 
 
-
+/*
 //中值滤波算法:采集32个，去掉前8个和后8个，取中间的16个值的平均值
 u16  ADC_Filter(void)
 {
@@ -680,9 +686,9 @@ u16  ADC_Filter(void)
                 sum+=value_buff[count];
         }
          
-        return (u16)(sum/(N_ADC-16));  
+        return (u16)(sum/(N_ADC-16))/4;  
 }
-
+*/
 //中值滤波算法:采集32个，去掉前8个和后8个，取中间的16个值的平均值
 u16  ADC_Filter_V(void)
 {
@@ -717,5 +723,35 @@ u16  ADC_Filter_V(void)
         return (u16)(sum/(N_ADC-16));  
 }
 
-
+//中值滤波算法:采集32个，去掉前8个和后8个，取中间的16个值的平均值
+u16  ADC_Filter_T(void)
+{
+        u32 sum=0;
+        u16 count,i,j,temp;
+	//运行处理时，停止重量的采集
+	T_Flag=0;
+	DelayMs(12);//确保定时器自动更新停止
+	//if(T_count >= N_ADC)
+	{
+		//用冒泡法对数据进行排序，当然最好用其他排序方法
+	        for(i=0;i<N_ADC;i++)           
+	        {
+	                for ( j = i; j < N_ADC; j++)
+	                {
+	                        if(T_value_buff[i]>T_value_buff[j])
+	                        {
+	                                temp=T_value_buff[i];
+	                                T_value_buff[i]=T_value_buff[j];
+	                                T_value_buff[j]=temp;
+	                        }
+	                }      
+	        }
+	         for (count=8;count<N_ADC-8;count++)//取中间16个的和
+	        {
+	                sum+=T_value_buff[count];
+	        }	
+	}  
+	T_Flag=1;
+        return (u16)(sum/(N_ADC-16))/4;  
+}
 

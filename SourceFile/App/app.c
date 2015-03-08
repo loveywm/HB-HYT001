@@ -53,6 +53,10 @@ unsigned char  fram_len = 0;
 u16  Voltage_Tmp;//电压采样的AD值
 u16  Weight_Tmp;//传感器的捕捉的重量值
 u16  Weight_Value;////实际采集到的最后重量AD值
+u16 T_value_buff[N_ADC];            //顺序采集到的AD保存值
+u16 T_count=0;//采集AD个数的计数值
+u8   T_Flag=1;//是否允许采集重量的的标志==0不允许   ==1允许
+
 
 //楼层数据保存
 Floor_Data   floor_tmp[MAX_FLOOR_NUM];
@@ -98,6 +102,10 @@ void HB_Run_Check_Stop(void)//检测是否需要停止
 				
 					//断开7s后再闭合
 					HB_RELAY_Close_Flag =1;
+
+					//到站后纠正补偿误差
+					//if(){}
+					
 					
 					//到站后目标楼层清零
 					Target_F = 0;
@@ -152,6 +160,20 @@ static void SystickRoutine(void)
     //回调函数，10ms一次被系统时钟调用
 
 	gTimeCount++;
+
+		
+	if(T_count > 10000)
+	{
+		T_count==0;
+	}
+	
+	if(T_Flag==1)
+	{
+		T_value_buff[T_count%N_ADC] = Weight_Tmp;
+		T_count++;
+
+	}
+			
 	
 	//Floor_CurrentCount  +=System.Device.Encoder.Enc_GetCount();
 

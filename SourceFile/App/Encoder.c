@@ -92,16 +92,28 @@ u8	Encoder_Demarcate(void)
 				if(floor_num_tmp ==1)
 				{
 					floor_data.floor_diff = 0;
+					if(floor_tmp[1].floor_flag == 1)
+					{
+						floor_data.floor_diff = 0;
+					}
+				}
+				else if(floor_num_tmp == 2)//标定第二层时，差值是第二层和第一层差值
+				{
+					floor_data.floor_diff = encoder_set_2-floor_tmp[0].floor_count;
 				}
 				else
 				{
 					
-					floor_data.floor_diff = encoder_set_2-floor_tmp[floor_num_tmp-2].floor_count;
+					//floor_data.floor_diff = encoder_set_2-floor_tmp[floor_num_tmp-2].floor_count;
+					//差值为当前楼层到第二层的差值
+					floor_data.floor_diff = encoder_set_2-floor_tmp[1].floor_count;
+
+
 					//如果当前值小于前一楼层或大于后一楼层，标定无效
-					if(floor_data.floor_count <floor_tmp[floor_num_tmp-2].floor_count)
-					{
-						continue;
-					}
+					//if(floor_data.floor_count <floor_tmp[floor_num_tmp-2].floor_count)
+					//{
+						//continue;
+					//}
 
 				}
 
@@ -173,7 +185,10 @@ u8	Encoder_Demarcate_Init(void)
 
 	//请务必停至一楼
 	uiLcdMediumString("*", 2 ,0,0);
-	uiLcd_1414_ch(UISTR_XXX_TINGZHIYILOU, 4, 14,8);
+	//uiLcd_1414_ch(UISTR_XXX_TINGZHIYILOU, 4, 14,8);
+	uiLcd_1414_ch(UISTR_XXX_TINGZHIYILOU, 4, 14,5);
+	uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_BIAODINGDIAN_TWO+5, 4, 14+14*5,1);
+	uiLcd_1414_ch(UISTR_XXX_TINGZHIYILOU+6, 4, 14+14*6,2);
 
 	
 	uiLcd_1414_ch(UISTR_XXX_SHIFOU, 6, 4+6,1);
@@ -223,19 +238,46 @@ u8	Encoder_Demarcate_Init(void)
 	{
 		if(floor_num_tmp==0)
 		{
+			//floor_data.floor_flag = 1;//标志位使用了
+			//floor_data.floor_num = floor_num_tmp+1;//楼层设置正确
+			//floor_data.floor_diff = 0;//楼层之间的差值
+			//floor_data.floor_count = Floor_CurrentCount;//楼层对应的编码值
+
+
+			//第一层等于第二层减去两者差值
 			floor_data.floor_flag = 1;//标志位使用了
 			floor_data.floor_num = floor_num_tmp+1;//楼层设置正确
 			floor_data.floor_diff = 0;//楼层之间的差值
-			floor_data.floor_count = Floor_CurrentCount;//楼层对应的编码值
+			floor_data.floor_count = Floor_CurrentCount-floor_tmp[1].floor_diff;//楼层对应的编码值
 
 		}
-		else
+		else if(floor_num_tmp==1)
 		{
 			floor_data.floor_flag = 1;//标志位使用了
 			floor_data.floor_num = floor_num_tmp+1;//楼层设置正确
-			floor_data.floor_diff = floor_tmp[floor_num_tmp].floor_diff;//楼层之间的差值
-			//楼层对应的编码值=前一层的编码值加上楼层差值
-			floor_data.floor_count = floor_tmp[floor_num_tmp-1].floor_count + floor_tmp[floor_num_tmp].floor_diff;
+			floor_data.floor_diff = floor_tmp[1].floor_diff;//楼层之间的差值
+			floor_data.floor_count = Floor_CurrentCount;
+		}
+		else
+		{
+			if(floor_tmp[floor_num_tmp].floor_diff ==0)//如果楼层编码差值未改变，那说明此层为用
+			{
+				floor_data.floor_flag = 0;//标志位使用了
+				floor_data.floor_num = floor_num_tmp+1;//楼层设置正确
+				floor_data.floor_diff = 0;//楼层之间的差值
+				//楼层对应的编码值=前一层的编码值加上楼层差值
+				floor_data.floor_count =0;
+			}else
+			{
+				floor_data.floor_flag = 1;//标志位使用了
+				floor_data.floor_num = floor_num_tmp+1;//楼层设置正确
+				floor_data.floor_diff = floor_tmp[floor_num_tmp].floor_diff;//楼层之间的差值
+				//楼层对应的编码值=前一层的编码值加上楼层差值
+				floor_data.floor_count =  floor_tmp[1].floor_count + floor_tmp[floor_num_tmp].floor_diff;
+			}
+			
+			
+			
 
 		}
 
@@ -283,11 +325,13 @@ u8	Encoder_Demarcate_Init(void)
 u8	Auto_Encoder_Demarcate(void)
 {
 	u8 nKey;
-	u8 floor_num_tmp = Target_F;
+	//u8 floor_num_tmp = Target_F;
+	u8 floor_num_tmp = 0;
 	//Floor_Data  floor_data;
 	u32 encoder_count= 0;
 	u32 encoder_diff= 0;
 	//u8 	encoder_flag=0;
+	u8 ywm=0;
 	
 	uiLcdClear();
 	
@@ -305,11 +349,21 @@ u8	Auto_Encoder_Demarcate(void)
 	uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI+2, 0, 4,2);
 	uiLcd_1414_ch(UISTR_XXX_CHAOZHI+1, 0, 4+14*2,1);
 
-	
+	//计算当前楼层
+	for(ywm=0;ywm<App.Max_floor-1;ywm++)
+	{
+		if(Floor_CurrentCount < (floor_tmp[ywm].floor_count+(floor_tmp[1].floor_diff/2)))
+		{
+			//uiLcdDecimal(ywm+1,0+2,3,0,2);
+			floor_num_tmp = ywm+1;
+			break;
+		}
+	}
+
 	while(1)
 	{
 		encoder_count = Floor_CurrentCount;
-		
+
 		//对应平层楼层保存的值
 		uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_count ,0,9,0,7);//显示对应楼层保存的计数器值
 		//uiLcdDecimal(floor_tmp[floor_num_tmp-1].floor_diff,2,9,0,7);//显示对应楼层保存的差值
@@ -337,7 +391,6 @@ u8	Auto_Encoder_Demarcate(void)
 					continue;
 				}
 				App.Up_buchang = encoder_diff;
-				
 			}
 			else if(encoder_count <floor_tmp[floor_num_tmp-1].floor_count)//下降
 			{

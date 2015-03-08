@@ -530,7 +530,7 @@ void InitializeTim(void)
 	NVIC_Init(&NVIC_InitStructure);  //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器 
 	
 	TIM_ITConfig(CALL_TIMER,TIM_IT_Update|TIM_IT_CC3,ENABLE);//允许更新中断 ,允许CC1IE捕获中断	
-	
+	     
    	TIM_Cmd(CALL_TIMER,ENABLE ); 	//使能定时器4
 
 	System.Device.Call_Floor.Remote_Scan =Remote_Scan;

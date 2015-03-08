@@ -40,12 +40,16 @@ typedef unsigned int UINT32,u32;
 #define 	PWD_MAP_ADD 	36*1024  //密码存放地址
 
 #define   MAX_FRAM_LEN    32   /*若帧长度大于此值，则认为无效，重新搜索帧头*/
-#define     MAX_FLOOR_NUM   50//此时定义楼层最大高度
+#define     MAX_FLOOR_NUM   99//此时定义楼层最大高度
+
+
+#define N_ADC   32//定义重量AD采样个数
 
 typedef struct{
         u8  floor_flag;//为1时表示在使用，为0时表示数值有问题
         u8  floor_num;//数值楼层
-        u16	floor_diff;//楼层之间的差值，低楼层到上一层之间的值，用于一键标定
+        //u16	floor_diff;//楼层之间的差值，低楼层到上一层之间的值，用于一键标定
+        u16	floor_diff;//楼层之间的差值，当前楼层到第二层之间的值，用于一键标定，因为第一层一直变
         u32     floor_count;//楼层对应的编码器计数值
 }Floor_Data;
 
@@ -114,7 +118,9 @@ extern Call_Data    HB_Floor_Call[MAX_FLOOR_NUM];
 extern u16  Voltage_Tmp;//电压采样的AD值
 extern u16  Weight_Tmp;//传感器的捕捉的重量值
 extern u16  Weight_Value;////实际采集到的最后重量AD值
-
+extern u16 T_value_buff[N_ADC];            //顺序采集到的AD保存值
+extern u16 T_count;//采集AD个数的计数值
+extern u8   T_Flag;//是否允许采集重量的的标志==0不允许   ==1允许
 
 extern u8 Cursor_Flag;
 

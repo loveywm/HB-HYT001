@@ -257,8 +257,8 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 		//显示  吨
 		uiLcd_1616_ch(11,6,74,1);
 		
-		//uiLcdMediumString("100",2,11,0);//这个数值填吊重百分比
-		//uiLcdMediumString("%",2,14,0);
+		uiLcdMediumString("100",3,12,0);//这个数值填吊重百分比
+		uiLcdMediumString("%",3,15,0);
 		
 		//用于显示呼叫楼层
 		//uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 0, 4, 4);
@@ -293,26 +293,26 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 	//uiLcdDecimal(Target_F,0+2,12,0,2);
 	if((Cursor_Flag == 1)&&(Target_F!=0))
 	{
-		uiLcdDecimal(Target_F,0+2,12,0,2);
+		uiLcdDecimal(Target_F,0+2,12,1,2);
 	}
 	else
 	{
-		uiLcdDecimal(Target_F,0+2,12,1,2);
+		uiLcdDecimal(Target_F,0+2,12,0,2);
 	}
 
 	//显示当前楼层
 	for(ywm=0;ywm<App.Max_floor-1;ywm++)
 	{
-		if(Floor_CurrentCount < (floor_tmp[ywm].floor_count+(floor_tmp[ywm+1].floor_diff/2)))
+		if(Floor_CurrentCount < (floor_tmp[ywm].floor_count+(floor_tmp[1].floor_diff/2)))
 		{
 			uiLcdDecimal(ywm+1,0+2,3,0,2);
 			break;
 		}
 	}
-	if(Floor_CurrentCount > (floor_tmp[App.Max_floor-2].floor_count+(floor_tmp[App.Max_floor-1].floor_diff/2)))
-	{
-		uiLcdDecimal(App.Max_floor,0+2,3,0,2);
-	}
+	//if(Floor_CurrentCount > (floor_tmp[App.Max_floor-2].floor_count+(floor_tmp[App.Max_floor-1].floor_diff/2)))
+	//{
+		//uiLcdDecimal(App.Max_floor,0+2,3,0,2);
+	//}
 
 
 	if(Parameter->Parameter_Change_Flag == 1)
@@ -326,9 +326,20 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 	
 			uiLcdDecimal(Parameter->Weight_Decimal,1+2,7,0,1);
 			uiLcdDecimal(Parameter->Weight_Percentile,1+2,8,0,1);
+
+			//重量百分比
+			uiLcdDecimal(Parameter->Weight_Percentage,1+2,12,0,3);
 			
 			//显示百分比
 			//uiLcdDecimal(Parameter->Weight_Percentage,2,11,0,3);
+			if(Parameter->Show_Flag== 1)
+			{
+				uiLcdMediumString("-",1+2,4,0);
+			}
+			else
+			{
+				uiLcdMediumString(":",1+2,4,0);//冒号
+			}
 		}
 	/*	
 		if((Parameter->Parameter_Change_Position)&(SHOWFLAG))
@@ -413,7 +424,7 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	
 
 	//获取重量的AD值
-	Weight_Value = ADC_Filter();
+	Weight_Value = ADC_Filter_T();
 	//printf("App.Weight_Tmp===%d\r\n",App.Weight_Tmp);
 			
 	if(App.Weight.weight_clear_ad_value_sign == 0)//为正
@@ -424,8 +435,9 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	         }
 	         else
 	         {
-	               ad_temp=App.Weight.weight_clear_ad_value-Weight_Value;//显示负
+	               	ad_temp=App.Weight.weight_clear_ad_value-Weight_Value;//显示负
 	                  //weight_display_sign=1;
+			//Parameter->Show_Flag = 1;//显示负号提示
 		}
 
 	}
@@ -447,30 +459,30 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	}
 	else
 	{
-		ad_temp=0;
+		//ad_temp=0;
+		ad_temp = App.Weight.Empty_weight -ad_temp;
+		Parameter->Show_Flag = 1;//显示负号提示
 	}
 
 	
 	//在这里进行报警和预警判断
 	if(ad_temp >(App.Weight.Rated_weight*App.Weight.Warning_weight/100))//超过预警值
 	{
-		uiLcdLineErase8x16(3,12,17,0);//将先前状态擦除
+		uiLcdLineErase8x16(2,0,3,0);//将先前状态擦除
 		//提示预警
-		//uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 6,84, 1);
-		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 6,96, 2);
+		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 4,1, 2);
 		
 		if(ad_temp >(App.Weight.Rated_weight*App.Weight.Alarm_weight/100))//超过报警值
 		{
 			//提示报警
-			uiLcdLineErase8x16(3,12,17,0);
-			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 6, 96, 2);
-			//uiLcdLineErase8x16(3,15,16,0);
+			uiLcdLineErase8x16(2,0,3,0);
+			uiLcd_1212_ch(UISTR_ZAIZHONG_YICAOZAI+1, 4, 1, 2);
+		
 			fuck_count++;
-			if(fuck_count >=3)
+			if(fuck_count >=2)//连续两次就断开
 			{
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_4,0);//超载打开
 			}
-			
 		}else
 		{
 			fuck_count=0;
@@ -479,9 +491,19 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	}
 	else
 	{
-		uiLcdLineErase8x16(3,12,17,0);//将先前状态擦除
+		uiLcdLineErase8x16(2,0,3,0);//将先前状态擦除
 		fuck_count=0;
 		System.Device.IO.HB_Gpio_Set_Value(RELAY_4,1);//超载闭合
+	}
+
+	//if(){}
+	//显示百分比
+	if(Parameter->Show_Flag == 1)
+	{
+		Parameter->Weight_Percentage=0;
+	}else
+	{
+		Parameter->Weight_Percentage=(u8)((ad_temp*100/App.Weight.Rated_weight));
 	}
 	
 	Parameter->Weight_Integer = (u8)(ad_temp/1000);
@@ -489,6 +511,9 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 	Parameter->Weight_Decimal =(u8)(ad_temp/100);
 	ad_temp=ad_temp%100;
 	Parameter->Weight_Percentile =(u8)(ad_temp/10);
+
+
+	
 
 	Parameter->Parameter_Change_Flag = 1;
 	Parameter->Parameter_Change_Position |= WEITHT;
@@ -738,7 +763,7 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 			}
                 		break;
 		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR://最大楼层
-			nValue = uiProcBoxNumber(&bRet, row, 13, App.Max_floor,1, 50, 2, 2, TRUE);
+			nValue = uiProcBoxNumber(&bRet, row, 13, App.Max_floor,1, 99, 2, 2, TRUE);
 			if (bRet) 
 			{
 				
@@ -1429,6 +1454,25 @@ void Voice_Call(u8 call_floor)
 		DelayMs(400);
 		WTV_Voice(CENG_FALG);
 		//DelayMs(300);
+	}else if(call_floor == 50)
+	{
+		WTV_Voice(FIVE_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
+	}
+	else if((call_floor > 50) && (call_floor < 60))
+	{
+		WTV_Voice(FIVE_FLAG);
+		DelayMs(500);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(500);
+		WTV_Voice(ONE_FLAG-1+call_floor-50);
+		DelayMs(400);
+		WTV_Voice(CENG_FALG);
+		//DelayMs(300);
 	}else
 	{
 
@@ -1674,15 +1718,40 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		else if(Target_F > App.Max_floor)
 		{
 			//界面提示错误值"目标层过大"
-	
-			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,0,66,2);
-			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,0,66+12*2,1);
-			uiLcd_1212_ch(UISTR_UI_GUODA,0,66+12*3,2);
-			DelayMs(1500);
+			
+			//uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,0,66,2);
+			//uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,0,66+12*2,1);
+			//uiLcd_1212_ch(UISTR_UI_GUODA,0,66+12*3,2);
+			uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+2,0,66,2);
+			uiLcd_1212_ch(UISTR_FLAG_IN_DOOR+3,0,66+12*2,1);
+			uiLcd_1212_ch(UISTR_ENCODER_FLOOR,0,66+12*3,2);
+			DelayMs(1200);
+			Target_F =0;
+			uiLcdLineErase8x16(0,8,17,0);//将先前状态擦除
 			
 		}
 		else
 		{
+			if(floor_tmp[Target_F-1].floor_flag == 0)//排除没有标定的楼层
+			{
+				//uiLcd_1212_ch(UISTR_AIM_LOU_CHENG,0,66,2);
+				//uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+3,0,66+12*2,1);
+				//uiLcd_1212_ch(UISTR_UI_GUODA,0,66+12*3,2);
+				//楼层未标定
+				uiLcd_1212_ch(UISTR_AIM_LOU_CHENG+2,0,66,2);
+				uiLcd_1212_ch(UISTR_FLAG_IN_DOOR+3,0,66+12*2,1);
+				uiLcd_1212_ch(UISTR_ENCODER_FLOOR,0,66+12*3,2);
+				DelayMs(1200);
+				Target_F =0;
+				HB_Start_Flag = 0;
+				HB_RELAY_Flag = 0;
+
+				uiLcdLineErase8x16(0,8,17,0);//将先前状态擦除
+				
+				return ;
+			
+			}
+			
 			//读取目标楼层的平层值
 			Floor_TargetCount = floor_tmp[Target_F-1].floor_count;
 
@@ -1791,12 +1860,15 @@ void uiProcMain(void)
 	u32 Time_tmp1;
 	u32 Time_tmp2;
 	u32 Time_tmp3;
+	u32 Time_tmp4;//用于重量采集
 	u32  Floor_CurrentCount_pre;
 	u16 ad_temp;
 	static  u32 fuck_count=0;
 	static  u8  fuck_flag=0;//当前平层值已保存的标志==0是没有 ==1是有
 
 	//static u32	xxxx=0;
+
+	
 
 	Menu_Parameter Parameter;
 	Target_F = 0;//初始话楼层
@@ -1834,6 +1906,7 @@ void uiProcMain(void)
 	Time_tmp1 =uiTimeGetTickCount();
 	Time_tmp2 = Time_tmp1;
 	Time_tmp3 = Time_tmp2;
+	Time_tmp4 = Time_tmp2;
 	while(1)
 	{
 
@@ -1848,7 +1921,7 @@ void uiProcMain(void)
 		}
 		uiProcProtocl();//楼层呼叫接受处理
 		
-		 if(uiTimeGetTickCount() -Time_tmp >150)//1500ms更新一次重量值
+		 if(uiTimeGetTickCount() -Time_tmp >100)//1000ms更新一次重量值
                	 {
                        	 //以后每隔2s钟上传一次
                        	if(App.Weight.weight_display_change_flg ==1)
@@ -1858,7 +1931,7 @@ void uiProcMain(void)
                         	Time_tmp =uiTimeGetTickCount();
 			//获取电压的AD值
 			ad_temp = ADC_Filter_V();
-			//连续1.5s*20=30s左右没有检测到电压时，就保存当前楼层数值
+			//连续1.0s*4=4s左右没有检测到电压时，就保存当前楼层数值
 			if(ad_temp <100)//检测到的电压AD值小于100时认为
 			{
 				fuck_count++;
@@ -1908,18 +1981,22 @@ void uiProcMain(void)
 			
 		//Handle_Master(&Parameter);
 
-		 if(uiTimeGetTickCount() -Time_tmp2 >30)//500ms获取一次标定编码值
+		 if(uiTimeGetTickCount() -Time_tmp2 >30)//300ms获取一次标定编码值
                	 {
 			
 			if(Floor_CurrentCount_pre >Floor_CurrentCount)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount_pre-Floor_CurrentCount;
 				uiLcd_1616_ch(4,4,57,1);//显示下降图标
-			}else if(Floor_CurrentCount_pre < Floor_CurrentCount)
+				Parameter.Parameter_Change_Position = 0;
+			}
+			else if(Floor_CurrentCount_pre < Floor_CurrentCount)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount-Floor_CurrentCount_pre;
 				uiLcd_1616_ch(3,4,57,1);//显示上升图标
-			}else
+				Parameter.Parameter_Change_Position = 0;
+			}
+			else
 			{
 				uiLcd_1616_ch(5,4,57,1);//显示清空
 			}
@@ -1939,6 +2016,12 @@ void uiProcMain(void)
 
 		//uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
 		
+		if(uiTimeGetTickCount() -Time_tmp4 >2)//2////20ms
+               	 {
+
+			Time_tmp4 = uiTimeGetTickCount();
+
+		}
 
 		
 		 
@@ -1948,6 +2031,7 @@ void uiProcMain(void)
 		uiProcMainDraw(FALSE,&Parameter);//更新显示
 		Parameter.Parameter_Change_Flag =0;
 		Parameter.Parameter_Change_Position=0;
+		Parameter.Show_Flag=0;
 
 
 
