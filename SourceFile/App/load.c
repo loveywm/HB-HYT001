@@ -44,14 +44,18 @@ u8 Load_Set_Calibration_tmp(u8 calibration)
 	uiLcdMediumString("ESC", 3, 13,0);
 
 	Time_tmp = uiTimeGetTickCount();
+	weignt_value_tmp	= ADC_Filter_T();
+	uiLcdDecimal(weignt_value_tmp,LOAD_ROW, LOAD_COL+7,0,4);
 	while(1)
 	{
-		 if(uiTimeGetTickCount() -Time_tmp >1000)//1000ms更新一次
+		 if(uiTimeGetTickCount() -Time_tmp >100)//1000ms更新一次
                	 {
 			//得到重量的AD值
 			weignt_value_tmp	= ADC_Filter_T();
 			Time_tmp = uiTimeGetTickCount();
+			uiLcdDecimal(weignt_value_tmp,LOAD_ROW, LOAD_COL+7,0,4);
 		 }
+		 
 /*
 		//减少刷新频率
 		if(weignt_value_tmp>weignt_value_tmp_back)

@@ -152,7 +152,7 @@ u8 Call_Learn(void)
 {
 	u8 nKey;
 	u8 ywm_tmp;
-	u8 floor_num_tmp = 0;
+	u16 floor_num_tmp = 0;
 	u32 Call_num_set_tmp= 0;
 	u32 Call_num_set= 0;
 	u32 Call_num_set2= 0;
@@ -278,6 +278,7 @@ u8 Call_Learn(void)
 			{
 				floor_num_tmp = 0;
 			}
+		
 		}
 		if(nKey == UIKEY_DOWN)//ÏÂ·­Êý×Ö
 		{

@@ -60,6 +60,7 @@ extern void ioctl_lcd_data_clear( T_LCDDAT * data, int devid );
 extern void ioctl_lcd_bmp_set( T_LCDDAT * data, int devid );
 
 void LCD_Init(void);
+void LCD_Init1(void);
 void LCD_clear(void);
 void LCD_set_xpos(int dat);
 void LCD_set_ypos(int dat);
@@ -91,7 +92,7 @@ void InitializeLcd_12864(void)
 	System.Device.Lcd_12864.LCD_Data_write = LCD_Data_write;
 	System.Device.Lcd_12864.uiLcdClear = uiLcdClear;
 
-	System.Device.Lcd_12864.LCD_Init=LCD_Init;
+	System.Device.Lcd_12864.LCD_Init=LCD_Init1;
 	
 	LCD_Init();
 	
@@ -109,7 +110,10 @@ void Comwrite(u8 cmd)
 {
 	u8 i,j;
 	Reset_CS;		//CS1=0;
+	DelayUs(1);
 	Reset_R_S;		//R_S=0;  
+	DelayUs(1);
+	//if(){}
 	Set_SCK;		//SCK=1;
 	for(i=0;i<8;i++)
 	{ 
@@ -117,11 +121,14 @@ void Comwrite(u8 cmd)
 		Reset_SCK;		// SCK=0;
 		if(cmd&0x80)
 			Set_SDA;		//SDA=cmd&0x80;
-		else Reset_SDA;
-			Set_SCK;		//SCK=1;	     
+		else 
+			Reset_SDA;
+		Set_SCK;		//SCK=1;	     
 		cmd=j<<1;
+		DelayUs(1);
 	}
 	Set_CS;			// CS1=1;
+	DelayUs(1);
 		//SetR_S;			//R_S=1;
 }
 
@@ -150,8 +157,10 @@ void LCD_Data_write(u8 dat)
 {
 	u8 i,j;
 	Reset_CS;			// CS1=0;
+	DelayUs(1);
 	SetR_S;		 		 //R_S=1;  
-    Set_SCK;			// SCK=1;
+	DelayUs(1);
+    	Set_SCK;			// SCK=1;
 	for(i=0;i<8;i++)
 	{ 
 		j=dat;
@@ -162,15 +171,19 @@ void LCD_Data_write(u8 dat)
 			Reset_SDA;
 		Set_SCK;		//SCK=1;
 		dat=j<<1;
+		DelayUs(1);
 	}
 	Set_CS;			//CS1=1;
+	DelayUs(1);
 	//Reset_R_S;			//	R_S=0;
 }
 void LCD_Cmd_write(u8 cmd)
 {
 	u8 i,j;
 	Reset_CS;		//CS1=0;
+	DelayUs(1);
 	Reset_R_S;		//R_S=0;  
+	DelayUs(1);
 	Set_SCK;		//SCK=1;
 	for(i=0;i<8;i++)
 	{ 
@@ -182,8 +195,10 @@ void LCD_Cmd_write(u8 cmd)
 			Reset_SDA;
 		Set_SCK;		//SCK=1;	     
 		cmd=j<<1;
+		DelayUs(1);
 	}
 	Set_CS;			// CS1=1;
+	DelayUs(1);
 		//SetR_S;			//R_S=1;
 }
 
@@ -254,6 +269,42 @@ void LCD_Init(void)
 
  // LCD_Cmd_write(0xa4);//10 nomal display
 		LCD_clear();
+}
+
+
+void LCD_Init1(void)
+{
+
+	
+//LCD_Cmd_write(0xe2);
+	//Set_LEDK;
+	//Set_RES;		//RES=1;
+
+  LCD_Cmd_write(0xa2);                         /* 1/9bias *///11
+LCD_Cmd_write(0xa0);                         /* ADC select , Normal *///8
+LCD_Cmd_write(0xc8);                         /* Common output reverse *///15
+  
+LCD_Cmd_write(0x26);                         /* internal resistor ratio *///17
+  
+LCD_Cmd_write(0x81);                         /* electronic volume mode set *///18
+LCD_Cmd_write(52);  //  22                  /* electronic volume *///18
+  
+LCD_Cmd_write(0x2c);                         //加速器打开/* V/C off, V/R off, V/F on *///16
+DelayMs(1);					//delay50ms
+LCD_Cmd_write(0x2e);                         //对比度调节电路打开/* V/C off, V/R off, V/F on *///16
+  DelayMs(1);					//delay50ms
+ LCD_Cmd_write(0x2f);                         //电压跟随电路打开/* V/C off, V/R off, V/F on *///16
+ DelayMs(1);					//delay50ms
+ LCD_Cmd_write(0xa6);                         //正常显示还是反白显示（整屏），此处设置为正常显示/* normal display 1=on *///9
+  LCD_Cmd_write(0xF8);				//设置加速器的速度倍率 20
+LCD_Cmd_write(0x00);				//此处设置为2到4倍速  20
+  LCD_Cmd_write(0xaf);                         //打开显示/* display on *///1
+LCD_Cmd_write(0x60);	//40			//
+  
+LCD_Cmd_write(0xac);			//静态指示是关闭还是打开static indicator 19
+
+ // LCD_Cmd_write(0xa4);//10 nomal display
+		//LCD_clear();
 }
 
 void LCD_clear(void)

@@ -1,69 +1,48 @@
----- Load_Set_Calibration Matches (65 in 7 files) ----
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR><BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-HYT001.htm (keil\output):<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration_tmp
-HB-HYT001.htm (keil\output):<P><STRONG><a name="[90]"></a>Load_Set_Calibration_tmp</STRONG> (Thumb, 1114 bytes, Stack size 40 bytes, load.o(.text))
-HB-HYT001.htm (keil\output):<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = Load_Set_Calibration_tmp &rArr; uiLcdDecimal &rArr; uiLcdMediumString &rArr; uiLcd8x16Char
-HB-HYT001.htm (keil\output):<P><STRONG><a name="[b9]"></a>Load_Set_Calibration</STRONG> (Thumb, 1194 bytes, Stack size 40 bytes, load.o(.text), UNUSED)
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-KZT.htm (keil\output):<P><STRONG><a name="[83]"></a>Load_Set_Calibration</STRONG> (Thumb, 1616 bytes, Stack size 32 bytes, load.o(.text))
-HB-KZT.htm (keil\output):<BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = Load_Set_Calibration &rArr; uiLcdDecimal &rArr; uiLcdMediumString &rArr; uiLcd8x16Char
-HB-KZT.htm (keil\output):<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-HB-SC-001.htm (keil\output):<P><STRONG><a name="[8f]"></a>Load_Set_Calibration</STRONG> (Thumb, 1616 bytes, Stack size 32 bytes, load.o(.text))
-HB-SC-001.htm (keil\output):<BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = Load_Set_Calibration &rArr; uiLcdDecimal &rArr; uiLcdMediumString &rArr; uiLcd8x16Char
-HB-SC-001.htm (keil\output):<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-Load.c (sourcefile\app):u8 Load_Set_Calibration_tmp(u8 calibration)
-Load.c (sourcefile\app):u8 Load_Set_Calibration(u8 calibration)
-Load.h (sourcefile\app):u8 Load_Set_Calibration(u8 calibration);
-Load.h (sourcefile\app):u8 Load_Set_Calibration_tmp(u8 calibration);
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-msOS-Stm32.htm (keil\output):<P><STRONG><a name="[89]"></a>Load_Set_Calibration</STRONG> (Thumb, 1616 bytes, Stack size 32 bytes, load.o(.text))
-msOS-Stm32.htm (keil\output):<BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = Load_Set_Calibration &rArr; uiLcdDecimal &rArr; uiLcdMediumString &rArr; uiLcd8x16Char
-msOS-Stm32.htm (keil\output):<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Load_Set_Calibration
-uiPross.c (sourcefile\app):			//Load_Set_Calibration(1);
-uiPross.c (sourcefile\app):			if(Load_Set_Calibration_tmp(1) == 1)
-uiPross.c (sourcefile\app):			//if(Load_Set_Calibration(2) == 1)
-uiPross.c (sourcefile\app):			if(Load_Set_Calibration_tmp(2) == 1)
----- Load_Set_Calibration Search Errors Encountered (1) ----
+---- ad_temp Matches (48 in 2 files) ----
+Load.c (sourcefile\app):	u32 ad_temp;
+Load.c (sourcefile\app):	                  	ad_temp=weignt_value_tmp-App.Weight.weight_clear_ad_value;
+Load.c (sourcefile\app):	                        	ad_temp=App.Weight.weight_clear_ad_value-weignt_value_tmp;
+Load.c (sourcefile\app):			ad_temp=weignt_value_tmp+App.Weight.weight_clear_ad_value;
+Load.c (sourcefile\app):		operate_temp=ad_temp;
+Load.c (sourcefile\app):        		ad_temp=(operate_temp * App.Weight.calibrate_sub_value)/App.Weight.calibrate_ad_sub_value;//得到最终的重量值	
+Load.c (sourcefile\app):		uiLcdDecimal(ad_temp,LOAD_ROW+1, LOAD_COL+8,0,4);
+Load.c (sourcefile\app):	u32 ad_temp;
+Load.c (sourcefile\app):	                  	ad_temp=weignt_value_tmp-App.Weight.weight_clear_ad_value;
+Load.c (sourcefile\app):	                        	ad_temp=App.Weight.weight_clear_ad_value-weignt_value_tmp;
+Load.c (sourcefile\app):			ad_temp=weignt_value_tmp+App.Weight.weight_clear_ad_value;
+Load.c (sourcefile\app):		operate_temp=ad_temp;
+Load.c (sourcefile\app):        		ad_temp=(operate_temp * App.Weight.calibrate_sub_value)/App.Weight.calibrate_ad_sub_value;//得到最终的重量值	
+Load.c (sourcefile\app):		uiLcdDecimal(ad_temp,LOAD_ROW+1, LOAD_COL+8,0,4);
+uiPross.c (sourcefile\app):	u16 ad_temp;
+uiPross.c (sourcefile\app):	ad_temp = ADC_Filter_V();
+uiPross.c (sourcefile\app):	uiLcdDecimal(ad_temp,0,0,0,5);
+uiPross.c (sourcefile\app):	temp=(float)ad_temp*(3.3/4096);
+uiPross.c (sourcefile\app):	u32 ad_temp,operate_temp;
+uiPross.c (sourcefile\app):	                  ad_temp=Weight_Value-App.Weight.weight_clear_ad_value;
+uiPross.c (sourcefile\app):	               	ad_temp=App.Weight.weight_clear_ad_value-Weight_Value;//显示负
+uiPross.c (sourcefile\app):		ad_temp=Weight_Value+App.Weight.weight_clear_ad_value;
+uiPross.c (sourcefile\app):	operate_temp=ad_temp;
+uiPross.c (sourcefile\app):	ad_temp=(operate_temp * App.Weight.calibrate_sub_value)/App.Weight.calibrate_ad_sub_value;//得到最终的重量值	
+uiPross.c (sourcefile\app):	//uiLcdDecimal(ad_temp,1+2, 0,0,4);
+uiPross.c (sourcefile\app):	if(ad_temp >App.Weight.Empty_weight)
+uiPross.c (sourcefile\app):		ad_temp = ad_temp-App.Weight.Empty_weight;
+uiPross.c (sourcefile\app):		//ad_temp=0;
+uiPross.c (sourcefile\app):		ad_temp = App.Weight.Empty_weight -ad_temp;
+uiPross.c (sourcefile\app):	if(ad_temp >(App.Weight.Rated_weight*App.Weight.Warning_weight/100))//超过预警值
+uiPross.c (sourcefile\app):		if(ad_temp >(App.Weight.Rated_weight*App.Weight.Alarm_weight/100))//超过报警值
+uiPross.c (sourcefile\app):		Parameter->Weight_Percentage=(u8)((ad_temp*100/App.Weight.Rated_weight));
+uiPross.c (sourcefile\app):	Parameter->Weight_Integer = (u8)(ad_temp/1000);
+uiPross.c (sourcefile\app):	ad_temp=ad_temp%1000;
+uiPross.c (sourcefile\app):	Parameter->Weight_Decimal =(u8)(ad_temp/100);
+uiPross.c (sourcefile\app):	ad_temp=ad_temp%100;
+uiPross.c (sourcefile\app):	Parameter->Weight_Percentile =(u8)(ad_temp/10);
+uiPross.c (sourcefile\app):	u32 ad_temp;
+uiPross.c (sourcefile\app):			ad_temp = ADC_Filter_V();
+uiPross.c (sourcefile\app):			uiLcdDecimal(ad_temp,1, 2+7,0,6);
+uiPross.c (sourcefile\app):	//uiLcdDecimal(ad_temp,1+2, 0,0,4);
+uiPross.c (sourcefile\app):	u16 ad_temp;
+uiPross.c (sourcefile\app):			ad_temp = ADC_Filter_V();
+uiPross.c (sourcefile\app):			if(ad_temp <100)//检测到的电压AD值小于100时认为
+---- ad_temp Search Errors Encountered (1) ----
 The following 1 files could not be processed:
 E:\code\HB-HYT001\Keil\Output\HB-HYT001.build_log.htm : File could not be opened.

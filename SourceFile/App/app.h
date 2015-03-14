@@ -105,6 +105,8 @@ extern Floor_Data   floor_tmp[MAX_FLOOR_NUM];
 //extern u8 master_pre_value;//扫描按键值的前面
 extern signed int Floor_CurrentCount;//用于计数编码器的的值
 extern u32	Floor_TargetCount;
+extern u32	Floor_StartCount;//用于保存楼层开始启动时的位置
+
 
 extern u8  HB_Start_Flag;
 extern u8  HB_RELAY_Flag;

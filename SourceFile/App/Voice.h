@@ -1,13 +1,18 @@
 #ifndef		_VOICE_H_
 #define		_VOICE_H_
 
+//对应的语音芯片模块版本
+//V141224-1-20SS义乌恒邦语音芯片样品制作单20141224.pdf
+
+
 //语音模块播放代码对应的枚举宏
 enum{
 
 	MASTER_UP_FLAG = 0x00,//升降机上升注意安全
 	MASTER_DOWM_FLAG,//升降机下降注意安全
 	DIAOLONGDAOZHAN,//吊笼到站
-	QINGTINGWENHOUZAIKAIMEN,//请停稳后再开门///这个暂时没有
+	//QINGTINGWENHOUZAIKAIMEN,//请停稳后再开门///这个暂时没有
+	HUJIAO,//呼叫
 	JINGLIAOMENWEIGUAN,//进料门未关
 	CHULIAOMENWEIGUAN=0x05,//出料门未关
 	TIANCHUANWEIGUAN,//天窗未关

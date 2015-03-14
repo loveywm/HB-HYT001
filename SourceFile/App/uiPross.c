@@ -224,7 +224,8 @@ static void uiProcMenuBuild(void)
 }
 void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*/
 {
-	int ywm;
+	int ywm=0;
+	int zuidalouceng=0;//存放最大楼层
 	if (Initialise)
 	{
 		uiLcdClear();
@@ -245,7 +246,7 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 
 		
 		uiLcdMediumString("00",0+2,3,0);//显示“当前楼层”数字
-		uiLcdMediumString("11",0+2,12,1);//显示“目标楼层”数字
+		uiLcdMediumString("00",0+2,12,1);//显示“目标楼层”数字
 		
 		//uiLcd_1212_ch(UISTR_WEIGHT,4,4,3);//显示“吊重：”
 		uiLcd_1616_ch(0,2+4,0,2);//显示“重量”
@@ -257,13 +258,14 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 		//显示  吨
 		uiLcd_1616_ch(11,6,74,1);
 		
-		uiLcdMediumString("100",3,12,0);//这个数值填吊重百分比
+		uiLcdMediumString("000",3,12,0);//这个数值填吊重百分比
 		uiLcdMediumString("%",3,15,0);
 		
 		//用于显示呼叫楼层
-		//uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 0, 4, 4);
+		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG, 0, 4, 2);
+		uiLcd_1414_ch(UISTR_XXX_HUJIAOLOUCENG+3, 0, 4+14*2, 1);
 
-		uiLcd_1616_ch(8,0,2,3);//显示  呼叫楼层
+		//uiLcd_1616_ch(8,0,2,3);//显示  呼叫楼层
 		uiLcdMediumString(":",0,6,0);//冒号
 
 		//uiLcd_1416_ch(0,0,2,4);
@@ -301,13 +303,31 @@ void uiProcMainDraw(BOOL Initialise,Menu_Parameter *Parameter)	/*待机界面的显示*
 	}
 
 	//显示当前楼层
-	for(ywm=0;ywm<App.Max_floor-1;ywm++)
+	for(ywm=0;ywm<App.Max_floor;ywm++)
 	{
-		if(Floor_CurrentCount < (floor_tmp[ywm].floor_count+(floor_tmp[1].floor_diff/2)))
+		if(floor_tmp[ywm].floor_flag == 0)
+		{
+			continue;
+		}
+		if(Floor_CurrentCount <=  (floor_tmp[ywm].floor_count+(floor_tmp[1].floor_diff/2)))
 		{
 			uiLcdDecimal(ywm+1,0+2,3,0,2);
 			break;
 		}
+	}
+	//假如循环超过最大楼层，说明当前值已经在最大楼层上面了
+	//那么就要找到最大楼层，然后显示
+	if(ywm == App.Max_floor)
+	{
+		for(ywm=0;ywm<App.Max_floor;ywm++)
+		{
+			if(floor_tmp[ywm].floor_flag == 1)
+			{
+				zuidalouceng = ywm+1;//记录最后有效标记的楼层就是最大层
+			}
+		}
+		//if(zuidalouceng==){}
+		uiLcdDecimal(zuidalouceng,0+2,3,0,2);
 	}
 	//if(Floor_CurrentCount > (floor_tmp[App.Max_floor-2].floor_count+(floor_tmp[App.Max_floor-1].floor_diff/2)))
 	//{
@@ -472,6 +492,7 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 		//提示预警
 		uiLcd_1212_ch(UISTR_ZAIZHONG_DAODAYUJINGZHI+2, 4,1, 2);
 		
+		
 		if(ad_temp >(App.Weight.Rated_weight*App.Weight.Alarm_weight/100))//超过报警值
 		{
 			//提示报警
@@ -481,12 +502,14 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 			fuck_count++;
 			if(fuck_count >=2)//连续两次就断开
 			{
+				Buzzer_Beep(3,100);//报警三声
 				System.Device.IO.HB_Gpio_Set_Value(RELAY_4,0);//超载打开
 			}
 		}else
 		{
 			fuck_count=0;
 			System.Device.IO.HB_Gpio_Set_Value(RELAY_4,1);//超载闭合
+			Buzzer_Beep(2,100);//预警三声
 		}
 	}
 	else
@@ -520,6 +543,64 @@ static u8  Handle_Weight(Menu_Parameter *Parameter)
 
 	return TRUE;
 }
+
+//显示相关参数
+void Show_Param(void)
+{
+	u16 weignt_value_tmp;
+	u8 nKey;
+	u32 ad_temp;
+	u32 operate_temp;
+	u32 Time_tmp=0;
+	uiLcdClear();
+
+
+	uiLcd_1414_ch(UISTR_XXX_ESC, 6,76,2);
+	uiLcdMediumString("ESC", 3, 13,0);
+
+	//当前标定值
+	uiLcd_1414_ch(UISTR_XXX_DANGQIAN, 0,4,2);
+	uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI+2, 0,4+14*2,2);
+	uiLcd_1414_ch(UISTR_XXX_JISUANJIANSUZHI+4, 0,4+14*4,1);
+
+	//电源电压
+	uiLcdMediumString("V-AD:", 1, 0,0);
+
+	//重量AD
+	//uiLcd_1414_ch(UISTR_XXX_ZAIZHONG_SET_ZHONGLIANGZHILING, 2,4,2);
+	uiLcdMediumString("T-AD:", 2, 0,0);
+
+	//测试使用
+	while(1)
+	{
+
+		 if(uiTimeGetTickCount() -Time_tmp >100)//1000ms更新一次
+               	 {
+			//得到重量的AD值
+			weignt_value_tmp	= ADC_Filter_T();
+
+			//得到电源电压的AD值
+			ad_temp = ADC_Filter_V();
+			
+			Time_tmp = uiTimeGetTickCount();
+			
+			//第一行显示平层值
+			uiLcdDecimal(Floor_CurrentCount,0, 2+7,0,6);
+
+			//第二行显示电源电压
+			uiLcdDecimal(ad_temp,1, 2+7,0,6);
+
+			//第三行显示重量
+			uiLcdDecimal(weignt_value_tmp,2, 2+7,0,6);
+			
+			
+		 }
+        		nKey = uiKeyGetKey();
+		if(nKey == UIKEY_ESC)
+			break;
+	}
+}
+
 /*
 static u8 Handle_ERR_Code(Menu_Parameter *Parameter)
 {
@@ -762,14 +843,14 @@ void uiProcMenuHasValue(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row
 				App.Other_buchang= nValue;
 			}
                 		break;
-		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR://最大楼层
-			nValue = uiProcBoxNumber(&bRet, row, 13, App.Max_floor,1, 99, 2, 2, TRUE);
-			if (bRet) 
-			{
+		//case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR://最大楼层
+			//nValue = uiProcBoxNumber(&bRet, row, 13, App.Max_floor,1, 99, 2, 2, TRUE);
+			//if (bRet) 
+			//{
 				
-				App.Max_floor= (u8)nValue;
-			}
-                		break;
+				//App.Max_floor= (u8)nValue;
+			//}
+                		//break;
 /*		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR_COUNT://由高速切换到低速的编码值
 			nValue = uiProcBoxNumber(&bRet, row, 12, 3000,0, 9999, 4,4, TRUE);
 			if (bRet) 
@@ -827,11 +908,20 @@ void uiProcMenuCustom(int nPopupMenuTitle, T_UI_MENUITEM *pUiMenuItem, int row)
 
 			//Encoder_Demarcate_Init();
 			break;
-		case UISTR_MENU_PINGCHENG_SET_UI_ZIDONG://自动平层标定界面
+		case UISTR_MENU_PINGCHENG_SET_UI_ZIDONG://平层修正界面
 			Encoder_Demarcate_Init();
 			break;
-		case UISTR_MENU_PINGCHENG_ZIDONGBUCANG://自动补偿
-			Auto_Encoder_Demarcate();
+		//case UISTR_MENU_PINGCHENG_ZIDONGBUCANG://自动补偿
+			//Auto_Encoder_Demarcate();
+			//break;
+		case UISTR_MENU_PINGCHENG_JISUAN_UP_BUCANG://计算上升补偿
+			Auto_Fuck_Encoder(2);
+			break;
+		case UISTR_MENU_PINGCHENG_JISUAN_DOWN_BUCANG://计算下降补偿
+			Auto_Fuck_Encoder(3);
+			break;
+		case UISTR_MENU_PINGCHENG_JISUAN_OTHER_BUCANG://计算减速补偿
+			Auto_Fuck_Encoder(1);
 			break;
 			
 		case UISTR_MENU_CALL_SET_UI://楼层学习界面
@@ -910,10 +1000,10 @@ void uiProcMenuDrawValue(T_UI_MENUITEM *pUiMenuItem, int row, BOOL bIsReverse)
 			uiLcdDecimal(App.Other_buchang, row, 12, 0, 4);
 			
 			break;
-		case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
-			uiLcdDecimal(App.Max_floor, row, 13, 0, 2);
+		//case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
+			//uiLcdDecimal(App.Max_floor, row, 13, 0, 2);
 			
-			break;
+			//break;
 		
 		default:
 			//uiLcdFatalError("DRAW_VALUE!");
@@ -952,7 +1042,8 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 			
 			break;
 		case UISTR_MENU_ZAIZHONG_SET:
-			uiLcd_1212_ch(UISTR_ZAIZHONG_SET, 0, 40, 4);
+			uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, 0, 40, 2);
+			uiLcd_1212_ch(UISTR_ZAIZHONG_SET+2, 0, 40+12*2, 2);
 			//i = UISTR_MENU_PINGCHENG_SET;
 			break;
 
@@ -1020,7 +1111,9 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 				break;
 			case UISTR_MENU_ZAIZHONG_SET:
 				//uiLcdSmallString("2:",2,0,1);
-				uiLcd_1212_ch(UISTR_ZAIZHONG_SET, (1+i)*2, HEAD_LEN, 4);
+				//uiLcd_1212_ch(UISTR_ZAIZHONG_SET, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1212_ch(UISTR_ZAIZHONG_SET_ZHONGLIANGZHILING, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1212_ch(UISTR_ZAIZHONG_SET+2, (1+i)*2, HEAD_LEN+12*2, 2);
 				break;
 			case UISTR_MENU_MIMA_SET:
 				//uiLcdSmallString("3:",4,0,1);
@@ -1037,17 +1130,18 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 				break;
 
 			//平层设置下的显示
-			case UISTR_MENU_PINGCHENG_SET_UI://手动平层标定界面
+			case UISTR_MENU_PINGCHENG_SET_UI://平层标定界面
 				//uiLcd_1414_ch(UISTR_XXX_SHOUDONG, (1+i)*2, HEAD_LEN, 2);
 				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN, 6);
 				break;
-			case UISTR_MENU_PINGCHENG_ZIDONGBUCANG://自动补偿
-				uiLcd_1414_ch(UISTR_XXX_ZIDONG, (1+i)*2, HEAD_LEN, 2);
-				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, (1+i)*2, HEAD_LEN+14*2, 2);
-				break;
-			case UISTR_MENU_PINGCHENG_SET_UI_ZIDONG://自动平层标定界面
-				uiLcd_1414_ch(UISTR_XXX_ZIDONG, (1+i)*2, HEAD_LEN, 2);
-				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN+14*2, 6);
+			//case UISTR_MENU_PINGCHENG_ZIDONGBUCANG://自动补偿
+				//uiLcd_1414_ch(UISTR_XXX_ZIDONG, (1+i)*2, HEAD_LEN, 2);
+				//uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, (1+i)*2, HEAD_LEN+14*2, 2);
+				//break;
+			case UISTR_MENU_PINGCHENG_SET_UI_ZIDONG://平层修正界面
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_XIUZHENG, (1+i)*2, HEAD_LEN+14*2, 2);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI+4, (1+i)*2, HEAD_LEN+14*4, 2);
 				break;
 			case UISTR_MENU_PINGCHENG_SET_UP_BUCHANG:
 				
@@ -1058,16 +1152,30 @@ void uiProcMenuDraw(T_UI_MENUITEM *pUiStartMenuItem, int nCount,int nTopIndex, i
 				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_DOWN_BUCHANG, (1+i)*2, HEAD_LEN, 4);
 				break;
 			case UISTR_MENU_PINGCHENG_SET_OTHER_BUCHANG:
-			
-				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_OTHER_BUCHANG, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1414_ch(UISTR_XXX_JISUANJIANSUZHI+2, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, (1+i)*2, HEAD_LEN+14*2,2);
 				break;
-			case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
-				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_MAX_FLOOR, (1+i)*2, HEAD_LEN, 4);
-				break;
+			//case UISTR_MENU_PINGCHENG_SET_MAX_FLOOR:
+				//uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_MAX_FLOOR, (1+i)*2, HEAD_LEN, 4);
+				//break;
 			case UISTR_MENU_PINGCHENG_QUANSHAN://平层标定全删
 				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UI, (1+i)*2, HEAD_LEN, 4);
 				uiLcd_1414_ch(UISTR_XXX_QUANBU, (1+i)*2, HEAD_LEN+14*4,1);
 				uiLcd_1414_ch(UISTR_XXX_SHANCHU, (1+i)*2, HEAD_LEN+14*5,1);
+				break;
+				
+			case UISTR_MENU_PINGCHENG_JISUAN_DOWN_BUCANG://计算下降补偿
+				uiLcd_1414_ch(UISTR_XXX_JISUANJIANSUZHI, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_DOWN_BUCHANG, (1+i)*2, HEAD_LEN+14*2,4);
+				break;
+			case UISTR_MENU_PINGCHENG_JISUAN_UP_BUCANG://计算上升补偿
+				uiLcd_1414_ch(UISTR_XXX_JISUANJIANSUZHI, (1+i)*2, HEAD_LEN, 2);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG, (1+i)*2, HEAD_LEN+14*2,4);
+				break;
+			case UISTR_MENU_PINGCHENG_JISUAN_OTHER_BUCANG://计算减速补偿
+				uiLcd_1414_ch(UISTR_XXX_JISUANJIANSUZHI, (1+i)*2, HEAD_LEN, 4);
+				uiLcd_1414_ch(UISTR_XXX_PINGCHENG_SET_UP_BUCHANG+2, (1+i)*2, HEAD_LEN+14*4,2);
+				//uiLcd_1414_ch(UISTR_XXX_SHANCHU, (1+i)*2, HEAD_LEN+14*5,1);
 				break;
 				
 			//载重设置下的显示
@@ -1375,12 +1483,11 @@ void uiProcMenu(int nPopupMenuTitle)
 }
 
 /////////////////////////////////////////////////////////////////////////////////
+#define AFTER_CENG	350
+#define AFTER_SHUZI	350
 
 void Voice_Call(u8 call_floor)
 {
-
-	u8 shiwei;
-	u8 gewei;
 	if(call_floor < 1)
 	{
 		return;
@@ -1388,243 +1495,209 @@ void Voice_Call(u8 call_floor)
 	if((call_floor > 0) && (call_floor < 11))//ok
 	{
 		WTV_Voice(ONE_FLAG-1+call_floor);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
+		
 	}else if((call_floor > 10) && (call_floor < 20))//ok
 	{
 		WTV_Voice(TEN_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(ONE_FLAG-1+call_floor-10);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 		
 	}else if(call_floor == 20)//ok
 	{
 		WTV_Voice(TWO_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else if((call_floor > 20) && (call_floor < 30))
 	{
 		WTV_Voice(TWO_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(ONE_FLAG-1+call_floor-20);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else if(call_floor == 30)
 	{
 		WTV_Voice(THREE_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else if((call_floor > 30) && (call_floor < 40))
 	{
 		WTV_Voice(THREE_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(ONE_FLAG-1+call_floor-30);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else if(call_floor == 40)
 	{
 		WTV_Voice(FOUR_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else if((call_floor > 40) && (call_floor < 50))
 	{
 		WTV_Voice(FOUR_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(ONE_FLAG-1+call_floor-40);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else if(call_floor == 50)
 	{
 		WTV_Voice(FIVE_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}
 	else if((call_floor > 50) && (call_floor < 60))
 	{
 		WTV_Voice(FIVE_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(TEN_FLAG);
-		DelayMs(500);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(ONE_FLAG-1+call_floor-50);
-		DelayMs(400);
+		DelayMs(AFTER_SHUZI);
 		WTV_Voice(CENG_FALG);
-		//DelayMs(300);
+		DelayMs(AFTER_CENG);
+		WTV_Voice(HUJIAO);
 	}else
 	{
 
 	}
 
-/*
+}
 
-	switch(call_floor)
+void Voice_Call_Num(u8 call_floor)
+{
+
+	if(call_floor < 1)
 	{
-		case 1:
-			WTV_Voice(ONE_FLAG);
-			break;
-		case 2:
-			WTV_Voice(TWO_FLAG);
-			break;
-		case 3:
-			WTV_Voice(THREE_FLAG);
-			break;
-		case 4:
-			WTV_Voice(FOUR_FLAG);
-			break;
-		case 5:
-			WTV_Voice(FIVE_FLAG);
-			break;
-		case 6:
-			WTV_Voice(SIX_FLAG);
-			break;
-		case 7:
-			WTV_Voice(SEVEN_FLAG);
-			break;
-		case 8:
-			WTV_Voice(EGHIT_FLAG);
-			break;
-		case 9:
-			WTV_Voice(NINE_FLAG);
-			break;
-		case 10:
-			WTV_Voice(TEN_FLAG);
-			break;
-		case 11:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(ONE_FLAG);
-			break;
-		case 12:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(TWO_FLAG);
-			break;
-		case 13:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(THREE_FLAG);
-			break;
-		case 14:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(FOUR_FLAG);
-			break;
-		case 15:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(FIVE_FLAG);
-			break;
-		case 16:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(SIX_FLAG);
-			break;
-		case 17:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(SEVEN_FLAG);
-			break;
-		case 18:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(EGHIT_FLAG);
-			break;
-		case 19:
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(NINE_FLAG);
-			break;
-		case 20:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			break;
-		case 21:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(ONE_FLAG);
-			break;
-		case 22:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(TWO_FLAG);
-			break;
-		case 23:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(THREE_FLAG);
-			break;
-		case 24:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(FOUR_FLAG);
-			break;
-		case 25:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(FIVE_FLAG);
-			break;
-		case 26:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(SIX_FLAG);
-			break;
-		case 27:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(SEVEN_FLAG);
-			break;
-		case 28:
-			WTV_Voice(TWO_FLAG);
-			DelayMs(500);
-			WTV_Voice(TEN_FLAG);
-			DelayMs(500);
-			WTV_Voice(SEVEN_FLAG);
-			break;
-		default:
-			break;
+		return;
 	}
-	DelayMs(400);
-	WTV_Voice(CENG_FALG);
-	DelayMs(300);
-*/
+	if((call_floor > 0) && (call_floor < 11))//ok
+	{
+		WTV_Voice(ONE_FLAG-1+call_floor);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+		
+	}else if((call_floor > 10) && (call_floor < 20))//ok
+	{
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(ONE_FLAG-1+call_floor-10);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+	
+		
+	}else if(call_floor == 20)//ok
+	{
+		WTV_Voice(TWO_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+		
+	}else if((call_floor > 20) && (call_floor < 30))
+	{
+		WTV_Voice(TWO_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(ONE_FLAG-1+call_floor-20);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+		
+	}else if(call_floor == 30)
+	{
+		WTV_Voice(THREE_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+	
+	}else if((call_floor > 30) && (call_floor < 40))
+	{
+		WTV_Voice(THREE_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(ONE_FLAG-1+call_floor-30);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+		
+	}else if(call_floor == 40)
+	{
+		WTV_Voice(FOUR_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+	
+	}else if((call_floor > 40) && (call_floor < 50))
+	{
+		WTV_Voice(FOUR_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(ONE_FLAG-1+call_floor-40);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+	
+	}else if(call_floor == 50)
+	{
+		WTV_Voice(FIVE_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+	
+	}
+	else if((call_floor > 50) && (call_floor < 60))
+	{
+		WTV_Voice(FIVE_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(TEN_FLAG);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(ONE_FLAG-1+call_floor-50);
+		DelayMs(AFTER_SHUZI);
+		WTV_Voice(CENG_FALG);
+	
+	}else
+	{
+
+	}
+
 
 }
 
@@ -1653,7 +1726,7 @@ void HB_RELAY_Mode(void)
 
 
 
-void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
+u8  uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 {
 	if(uiKeyIsDigit(nKey) )	/*判断按键是否是数字*/
 	{
@@ -1748,12 +1821,14 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 
 				uiLcdLineErase8x16(0,8,17,0);//将先前状态擦除
 				
-				return ;
+				return 0;
 			
 			}
 			
 			//读取目标楼层的平层值
 			Floor_TargetCount = floor_tmp[Target_F-1].floor_count;
+			
+			Floor_StartCount = Floor_CurrentCount;
 
 			System.Device.IO.HB_Gpio_Set_Value(RELAY_3,1);//高速闭合
 			System.Device.IO.HB_Gpio_Set_Value(RELAY_1,1);//上升
@@ -1762,6 +1837,8 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 			//这里存在先后问题，要先判断运行方向，再开启运行
 			HB_RELAY_Mode();
 			HB_Start_Flag = 1;
+
+			return 1;
 			//uiLcdDecimal(Floor_TargetCount,0,11,0,5);
 		}
 		
@@ -1779,18 +1856,20 @@ void uiProcKey(u8 nKey,Menu_Parameter *Parameter)
 		//显示
 		
 		uiProcMainDraw(TRUE,Parameter);	
+		Target_F = 0;
 	}
 	else if (nKey == UIKEY_DEL)//临时调出重量的数据显示
 	{
 		//get_weight_clear_value();
 		//Auto_Encoder_Demarcate();
-		weight_flag();
+		//weight_flag();
+		Show_Param();
 		System.Device.Lcd_12864.LCD_Init();
 		uiProcMainDraw(TRUE,Parameter);
 
 	}
 
-
+	return 0;
 
 }
 void uiProcProtocl(void)
@@ -1865,7 +1944,7 @@ void uiProcMain(void)
 	u16 ad_temp;
 	static  u32 fuck_count=0;
 	static  u8  fuck_flag=0;//当前平层值已保存的标志==0是没有 ==1是有
-
+	u32 ywm_tmp;//临时变量
 	//static u32	xxxx=0;
 
 	
@@ -1907,6 +1986,7 @@ void uiProcMain(void)
 	Time_tmp2 = Time_tmp1;
 	Time_tmp3 = Time_tmp2;
 	Time_tmp4 = Time_tmp2;
+	Floor_CurrentCount_pre =Floor_CurrentCount;//消除开机时的光标闪烁
 	while(1)
 	{
 
@@ -1916,7 +1996,10 @@ void uiProcMain(void)
 		nKey  = uiKeyGetKey();//处理按键和楼层
 		if(nKey != UIKEY_NONE)
 		{	
-			uiProcKey(nKey,&Parameter);
+			if(uiProcKey(nKey,&Parameter) == 1)
+			{
+				Time_tmp4 = uiTimeGetTickCount();//特殊返回值处理
+			}
 		
 		}
 		uiProcProtocl();//楼层呼叫接受处理
@@ -1956,7 +2039,20 @@ void uiProcMain(void)
 			
 			if(call_flag==0)
 			{
+				for(ywm_tmp=0;ywm_tmp<App.Max_floor;ywm_tmp++)
+				{
+					if(floor_tmp[ywm_tmp].floor_flag == 0)
+					{
+						continue;
+					}
+					if(Floor_CurrentCount <=  (floor_tmp[ywm_tmp].floor_count+(floor_tmp[1].floor_diff/2)))
+					{
+						break;
+					}
+				}
 				WTV_Voice(DINGDONG);
+				DelayMs(1000);
+				Voice_Call_Num(ywm_tmp+1);
 				call_flag=1;
 			}
 			
@@ -1984,13 +2080,13 @@ void uiProcMain(void)
 		 if(uiTimeGetTickCount() -Time_tmp2 >30)//300ms获取一次标定编码值
                	 {
 			
-			if(Floor_CurrentCount_pre >Floor_CurrentCount)
+			if(Floor_CurrentCount_pre >Floor_CurrentCount+10)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount_pre-Floor_CurrentCount;
 				uiLcd_1616_ch(4,4,57,1);//显示下降图标
 				Parameter.Parameter_Change_Position = 0;
 			}
-			else if(Floor_CurrentCount_pre < Floor_CurrentCount)
+			else if(Floor_CurrentCount_pre < Floor_CurrentCount-10)
 			{
 				//Floor_CurrentCount_diff = Floor_CurrentCount-Floor_CurrentCount_pre;
 				uiLcd_1616_ch(3,4,57,1);//显示上升图标
@@ -2016,12 +2112,26 @@ void uiProcMain(void)
 
 		//uiLcdDecimal(Floor_CurrentCount,0,11,0,5);
 		
-		if(uiTimeGetTickCount() -Time_tmp4 >2)//2////20ms
-               	 {
+		if(HB_Start_Flag == 1)
+		{
+			//按键按下6秒后，如果范围没超过按下是的正负10时，就清零
+			if(uiTimeGetTickCount() -Time_tmp4 > 900)//2////9000ms
+	               	{
 
+				//Time_tmp4 = uiTimeGetTickCount();
+				if((Floor_CurrentCount >(Floor_StartCount-10)) &&(Floor_CurrentCount <(Floor_StartCount+10)) )
+				{
+					HB_Start_Flag=0;
+					HB_RELAY_Flag =0;
+					Target_F =0;
+				}
+			}
+
+		}else
+		{
 			Time_tmp4 = uiTimeGetTickCount();
-
 		}
+		
 
 		
 		 

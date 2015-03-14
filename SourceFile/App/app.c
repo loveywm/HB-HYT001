@@ -62,6 +62,7 @@ u8   T_Flag=1;//是否允许采集重量的的标志==0不允许   ==1允许
 Floor_Data   floor_tmp[MAX_FLOOR_NUM];
 signed int  Floor_CurrentCount = 0;//用于计数编码器的的值
 u32	Floor_TargetCount =0;//用于保存目标楼层的编码器值
+u32	Floor_StartCount =0;//用于保存楼层开始启动时的位置
 
 //楼层呼叫
 u8  HB_Floor_Call_Num = 0;//用于显示楼层呼叫楼层
@@ -299,7 +300,7 @@ void InitializeData(void)
 		App.Up_buchang = 0;
 		App.Down_buchang = 0;
 		App.Other_buchang = 3000;
-		App.Max_floor = 25;
+		App.Max_floor = 99;
 		//App.Floor_Count_Max = 3000;
 
 		//App.Floor_CurrentCount_Init = 20000;
@@ -350,6 +351,7 @@ void InitializeData(void)
 
 	Flash_ReadInfo((UINT8 *)HB_Floor_Call, CALL_ADD, sizeof(Call_Data)*MAX_FLOOR_NUM);
 	//Flash_WriteInfo((u8*)&App,APP_SETUP_ADD,sizeof(App));
+	App.Max_floor =MAX_FLOOR_NUM;
 
 
 }

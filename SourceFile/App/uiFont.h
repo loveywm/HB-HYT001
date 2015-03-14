@@ -1,7 +1,7 @@
 #ifndef __UIFONT_H__
 #define __UIFONT_H__
 
-#define MAX_UI  6+9+8+3+1  //菜单文件含有的项目和
+#define MAX_UI  6+9+8+3+1+3-2  //菜单文件含有的项目和
 
 typedef enum
 {
@@ -117,6 +117,10 @@ enum
 	UISTR_MENU_PINGCHENG_QUANSHAN,//平层标定全删
 	UISTR_MENU_PINGCHENG_ZIDONGBUCANG,//自动补偿
 
+	UISTR_MENU_PINGCHENG_JISUAN_UP_BUCANG,//计算上升补偿
+	UISTR_MENU_PINGCHENG_JISUAN_DOWN_BUCANG,//计算下降补偿
+	UISTR_MENU_PINGCHENG_JISUAN_OTHER_BUCANG,//计算减速补偿
+
 };
 
 //14*14的索引
@@ -169,6 +173,9 @@ enum
 	UISTR_XXX_SHIYONG= 96,//使用
 
 	UISTR_XXX_QUANBU=98,//全部
+
+	UISTR_XXX_XIUZHENG=100,//修正
+	UISTR_XXX_JISUANJIANSUZHI=102,//计算减速值
 };
 
 #endif//__UIFONT_H__
